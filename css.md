@@ -68,10 +68,12 @@ CSS 代码总结
 ### 图文不可选择
 
 ```css
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
+.not-select {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
 ```
 
 ### css -表单验证
