@@ -12,7 +12,7 @@
 
 ---
 
-### <a name="section_es6"></a>
+### <a name="section_base"></a>
 
 ## js 基础知识
 
