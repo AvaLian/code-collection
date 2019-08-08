@@ -4,22 +4,315 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>css test</title>
+		<title>CSS3 clip-path之polygon绘图与动画实例页面</title>
 		<style>
-			div {
+			.demo p {
+				height: 30px;
+				margin: 10px 0 0;
+			}
+
+			.triangle {
+				display: block;
+				height: 20px;
+				background-color: currentColor;
+				-webkit-transition: all 0.25s;
+				transition: all 0.25s;
+			}
+			.path1 {
+				-webkit-clip-path: polygon(5px 10px, 16px 3px, 16px 17px);
+				clip-path: polygon(5px 10px, 16px 3px, 16px 17px);
+			}
+			.path2 {
+				-webkit-clip-path: polygon(3px 5px, 17px 5px, 10px 16px);
+				clip-path: polygon(3px 5px, 17px 5px, 10px 16px);
+			}
+			.path3 {
+				-webkit-clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 10px,
+					26px 10px,
+					26px 3px,
+					37px 10px,
+					26px 17px,
+					26px 10px,
+					16px 10px,
+					16px 17px
+				);
+				clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 10px,
+					26px 10px,
+					26px 3px,
+					37px 10px,
+					26px 17px,
+					26px 10px,
+					16px 10px,
+					16px 17px
+				);
+			}
+			.path4 {
+				-webkit-clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 10px,
+					36px 10px,
+					36px 3px,
+					47px 10px,
+					36px 17px,
+					36px 10px,
+					16px 10px,
+					16px 17px
+				);
+				clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 10px,
+					36px 10px,
+					36px 3px,
+					47px 10px,
+					36px 17px,
+					36px 10px,
+					16px 10px,
+					16px 17px
+				);
+			}
+			.path5 {
+				-webkit-clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 9px,
+					36px 9px,
+					36px 3px,
+					47px 10px,
+					36px 17px,
+					36px 10px,
+					16px 10px,
+					16px 17px
+				);
+				clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 9px,
+					36px 9px,
+					36px 3px,
+					47px 10px,
+					36px 17px,
+					36px 10px,
+					16px 10px,
+					16px 17px
+				);
+			}
+			.path6 {
+				-webkit-clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 9px,
+					36px 9px,
+					36px 3px,
+					47px 10px,
+					36px 17px,
+					36px 11px,
+					16px 11px,
+					16px 17px
+				);
+				clip-path: polygon(
+					5px 10px,
+					16px 3px,
+					16px 9px,
+					36px 9px,
+					36px 3px,
+					47px 10px,
+					36px 17px,
+					36px 11px,
+					16px 11px,
+					16px 17px
+				);
+			}
+			.path7 {
+				-webkit-clip-path: polygon(
+					5px 11px,
+					5px 9px,
+					16px 3px,
+					26px 3px,
+					40px 9px,
+					48px 15px,
+					48px 5px,
+					40px 11px,
+					26px 17px,
+					16px 17px
+				);
+				clip-path: polygon(
+					5px 11px,
+					5px 9px,
+					16px 3px,
+					26px 3px,
+					40px 9px,
+					48px 15px,
+					48px 5px,
+					40px 11px,
+					26px 17px,
+					16px 17px
+				);
+			}
+			.path7:before {
+				content: '';
+				position: absolute;
+				width: 3px;
+				height: 3px;
+				border-radius: 3px;
+				background-color: #fff;
+				margin: 8px 0 0 12px;
+			}
+			.flex {
+				display: flex;
+				background: #aaa;
+			}
+			.flex div {
+				margin: auto;
+				width: 30px;
+				height: 30px;
+				background: blue;
+				border: 1px solid red;
+			}
+			.clear-float {
+				border: 2px solid #000;
+				display: flow-root;
+			}
+			.clear-float .left {
 				width: 100px;
 				height: 100px;
-				float: left;
 				background: blue;
-				border: 1px solid #000;
+				float: left;
 			}
-			.b {
-				background: red;
+			.input {
+				display: block;
+			}
+			.linear-gradient {
+				height: 100px;
+				/* background: repeating-linear-gradient(90deg, red, red 40px, blue 40px, blue 80px); */
+				background: linear-gradient(90deg, red, red 40px, blue 40px, blue 80px);
+				background-size: 80px;
+			}
+			.pie-gradient {
+				width: 120px;
+				height: 120px;
+				border-radius: 50%;
+				background: conic-gradient(red 0 30%, blue 30% 60%, green 60% 100%);
+			}
+			pre {
+				tab-size: 2;
+			}
+			.fill-available-block {
+				width: -webkit-fill-available;
+				display: inline-block;
+				background: #eee;
+				border: 10px solid plum;
+			}
+			.fill-content-block {
+				width: fit-content;
+				background: #eee;
+				border: 10px solid plum;
+				margin: auto;
+			}
+			.progress {
+				height: 60px;
+				border-radius: 30px;
+				background-color: silver;
+				background-image: radial-gradient(closest-side circle at var(--p), var(--c), var(--c) 100%, transparent),
+					linear-gradient(var(--c), var(--c));
+				background-size: 100%, var(--p);
+				background-repeat: no-repeat;
 			}
 		</style>
 	</head>
 	<body>
-		<div></div>
-		<div class="b"></div>
+		<div class="progress" style="--c:green;--p:60%"></div>
+		<span class="fill-available-block">
+			width:fill-available比较好理解
+		</span>
+		<div class="fill-content-block">
+			width:fill-content
+		</div>
+		<pre>
+				.pie-gradient {
+					width: 120px;
+					height: 120px;
+					border-radius: 50%;
+					background: conic-gradient(red 0 30%, blue 30% 60%, green 60% 100%);
+				}
+		</pre
+		>
+		<div class="pie-gradient"></div>
+		<div class="linear-gradient"></div>
+		<input type="text" class="input" />
+		<div class="clear-float">
+			<div class="left"></div>
+			<p>
+				然后兼容低版浏览器问题，解决方法 .wrapper{display: flow-root;} @supports not (display:flow-root) {
+				.wrapper::after { content: ''; display: table; clear:both; } }
+			</p>
+		</div>
+		<div class="flex">
+			<div>1</div>
+			<div>2</div>
+			<div>3</div>
+			<div>4</div>
+			<div>5</div>
+		</div>
+		<div id="effect" class="part">
+			<h3>效果：</h3>
+			<div class="show">
+				<div class="demo">
+					<div id="step1">
+						<p><button id="button1">来一个三角</button></p>
+						<div><i class="triangle"></i></div>
+					</div>
+					<div id="step2" hidden>
+						<p><button id="button2">鼠标hover朝下转</button></p>
+						<div><i class="triangle path1"></i></div>
+					</div>
+					<div id="step3" hidden>
+						<p><button id="button3">再来一个三角</button></p>
+						<div><i class="triangle path1"></i></div>
+					</div>
+					<div id="step4" hidden>
+						<p><button id="button4">距离开一点</button></p>
+						<div><i class="triangle path3"></i></div>
+					</div>
+					<div id="step5" hidden>
+						<p><button id="button5">再连一根线</button></p>
+						<div><i class="triangle path4"></i></div>
+					</div>
+					<div id="step6" hidden>
+						<p><button id="button6">线不能粗一点吗？</button></p>
+						<div><i class="triangle path5"></i></div>
+					</div>
+					<div id="step7" hidden>
+						<p><button id="button7">给爷变个身！</button></p>
+						<div><i class="triangle path6"></i></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			if (window.addEventListener) {
+				var triangles = document.querySelectorAll('.triangle')
+				var buttons = document.querySelectorAll('.demo button')
+				;[].slice.call(buttons).forEach(function(button, index) {
+					button.addEventListener('click', function() {
+						var id = this.id.replace(/\D/g, ''),
+							step = document.getElementById('step' + (id * 1 + 1))
+						triangles[index].classList.add('path' + id)
+						if (step) step.removeAttribute('hidden')
+						// 父亲元素.replaceChild(新，旧)
+						var newElement = document.createElement('strong')
+						newElement.innerHTML = this.innerHTML
+						this.parentNode.replaceChild(newElement, this)
+					})
+				})
+			}
+		</script>
 	</body>
 </html>
