@@ -400,7 +400,7 @@ input {
 }
 ```
 
-### ios 滚动不流畅问题之 `-webkit-overflow-scrolling:touch`
+### ios 滚动不流畅问题之 `-webkit-overflow-scrolling:touch` 上下拉动滚动条时卡顿、慢
 
 在移动端上，在你用`overflow-y:scorll`属性的时候，你会发现滚动的效果很木，很慢，这时候可以使用`-webkit-overflow-scrolling:touch`这个属性，让滚动条产生滚动回弹的效果，就像 ios 原生的滚动条一样流畅。
 
@@ -410,12 +410,15 @@ input {
     `touch`: 使用具有回弹效果的滚动, 当手指从触摸屏上移开，内容会继续保持一段时间的滚动效果。继续滚动的速度和持续的时间和滚动手势的强烈程度成正比。同时也会创建一个新的堆栈上下文。
 
 ```css
+body {
+	-webkit-overflow-scrolling: touch;
+	overflow-scrolling: touch;
+}
 html,
 body {
 	height: 100%;
 }
 main {
-	padding: 50px 0;
 	height: 100%;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
@@ -426,3 +429,156 @@ main {
 
 -   如果出现偶尔卡住不动的情况，那么在使用该属性的元素上`不设置定位`或者`手动设置定位为static`
 -   如果添加`动态内容`页面不能滚动，让`子元素height+1`
+
+### 长时间按住页面出现闪退
+
+```css
+element {
+	-webkit-touch-callout: none;
+}
+```
+
+### iphone 及 ipad 下输入框默认内阴影和圆角
+
+```css
+input {
+	-webkit-appearance: none;
+	border-radius: 0; /*  ios上的下拉框会有圆角 */
+	line-height: normal; /*手机上的line-height不能写成和height的值一样，会出现再次输入光标靠上的现象*/
+	transform: translateZ(0); /*解决加入js后input框输入瞬间变白的现象*/
+}
+```
+
+### ios 和 android 下触摸元素时出现半透明灰色遮罩
+
+设置 alpha 值为 0 就可以去除本透明灰色遮罩，备注：transparent 的属性值在 android 下无效。
+
+```css
+    -webkit-tap-highlight-color:rgba(255,255,255,0);
+}
+```
+
+### active 兼容处理 即 伪类：active 失效
+
+```html
+<!-- 方法一：body添加ontouchstart -->
+<body ontouchstart=""></body>
+```
+
+```js
+// 方法二：js给document绑定touchstart或touchend事件
+<style>
+a{
+    color:#000;
+}
+a:active{
+    color:#fff;
+}
+</style>
+<a href='foo'>bar</a>
+<script>
+    document.addEventListentener('touchstart',function(){},false);)
+</script>
+```
+
+### 1px 边框
+
+```css
+a::after {
+	content: '';
+	display: block;
+	width: 100%;
+	height: 1px;
+	background: #333;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	transform: scaleY(0.5);
+}
+/* Retina屏的1px边框 */
+element {
+	border-width: thin;
+}
+```
+
+### 旋转屏幕时，字体大小调整的问题
+
+```css
+html,
+body,
+form,
+fieldset,
+p,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	-webkit-text-size-adjust: 100%;
+}
+```
+
+### transiton 闪屏
+
+```css
+/* 设置内联的元素在3D空间如何呈现：保留3D */
+-webkit-transform-style: preserve-3D;
+/* 设置进行转换的元素的背面在面对用户时是否课件：隐藏 */
+-webkit-backface-visibility: hidden;
+```
+
+### 圆角 bug
+
+某些 Android 手机圆角失效 `background-clip:padding-box`;
+
+### 页面初始化
+
+```css
+html,
+body {
+	overflow: hidden; /*手机上写overflow-x:hidden;会有兼容性问题，如果子级如果是绝对定位有运动到屏幕外的话ios7系统会出现留白*/
+	-webkit-overflow-scrolling: touch; /*流畅滚动,ios7下会有滑一下滑不动的情况，所以需要写上*/
+	position: realtive; /*直接子级如果是绝对定位有运动到屏幕外的话，会出现留白*/
+}
+```
+
+### 给不同屏幕大小的手机设置特殊样式
+
+```css
+@media only screen and (min-device-width: 320px) and (max-device-width: 375px) {
+}
+```
+
+### select 下拉选择设置右对齐
+
+```css
+select option {
+	direction: rtl;
+}
+```
+
+### 通过 transform 进行 skew 变形，rotate 旋转会造成出现锯齿现象
+
+```css
+-webkit-transform: rotate(-4deg) skew(10deg) translateZ(0);
+transform: rotate(-4deg) skew(10deg) translateZ(0);
+outline: 1px solid rgba(255, 255, 255, 0);
+```
+
+### 字体 font-family
+
+-   天猫：`font-family: "PingFang SC",miui,system-ui,-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,sans-serif`;
+-   Github：`font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol`;
+-   CSS-Tricks：`font-family: system-ui,-apple-system,BlinkMacSystemFont,segoe ui,Roboto,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol`;
+    -   `system-ui`，使用各个支持平台上的默认系统字体
+    -   `-apple-system`， 在一些稍低版本 Mac OS X 和 iOS 上，它针对旧版上的 Neue Helvetica 和 Lucida Grande 字体，升级使用更为合适的 San Francisco Fonts
+    -   `BlinkMacSystemFont`，针对一些 Mac OS X 上的 Chrome 浏览器，使用系统默认字体
+    -   `segoe ui`，在 Windows 及 Windows Phone 上选取系统默认字体
+    -   `Roboto`，面向 Android 和一些新版的的 Chrome OS
+    -   Helvetica,Arial，在针对不同操作系统不同平台设定采用默认系统字体后，针对一些低版本浏览器的降级方案
+    -   sans-serif，兜底方案，保证字体风格统一，至少也得是无衬线字体
+
+```css
+```

@@ -726,4 +726,25 @@ localStorage.setItem('love', JSON.stringify('I Love You'))
 $('input').on('blur', function() {
 	//具体事件处理
 })
+document.body.addEventListener('focusout', () => {
+	// 回到原点  若觉得一瞬间回到底部不够炫酷，那自己可以自定义缓慢回弹效果， 可用css 、贝塞尔曲线、js的 requestAnimationFrame  等等 方法 实现体验性更好的回弹效果
+	window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+})
+```
+
+#### input 在 ios 下会被遮住部分
+
+尽量不要用 fixed 布局
+
+```js
+$('input').on('focus', function(e) {
+	$('.chatBox-send').css('position', 'absolute')
+	setTimeout(function() {
+		e.target.scrollIntoView(true)
+		// true:元素的顶端将和其所在滚动区的可视区域的顶端对齐; false:底端对齐。
+	}, 200) // 延时 == 键盘弹起需要时间
+})
+$('.div-textarea').on('blur', function() {
+	$('.chatBox-send').css('position', 'fixed')
+})
 ```

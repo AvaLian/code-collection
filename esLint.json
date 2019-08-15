@@ -1,3 +1,7 @@
+// off 或 0：表示不验证规则。
+// warn 或 1：表示验证规则，当不满足时，给警告。
+// error或 2 ：表示验证规则，不满足时报错。
+
 "no-alert": 0,//禁止使用alert confirm prompt
 "no-array-constructor": 2,//禁止使用数组构造器
 "no-bitwise": 0,//禁止使用按位运算符
