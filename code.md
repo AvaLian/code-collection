@@ -8,6 +8,7 @@
 
 -   [百度网址统计](#section_baidu)
 -   [让当前的元素滚动到浏览器窗口的可视区域内 scrollIntoView](#section_scrollIntoView)
+-   [苹果设备 h5 页面软键盘收回后页面底部留白问题](#section_iphone)
 
 ---
 
@@ -31,7 +32,7 @@
 
 ---
 
-### <a name="section_baidu"></a>
+### <a name="section_scrollIntoView"></a>
 
 ### 让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`
 
@@ -93,4 +94,55 @@ scrollIntoView 只接受一个参数，但接受两种类型的参数，分别�
 		})
 	</script>
 </body>
+```
+
+---
+
+### <a name="section_iphone"></a>
+
+### 苹果设备 h5 页面软键盘收回后页面底部留白问题
+
+```js
+// 这里监听键盘收起，然后滚动顶部
+document.body.addEventListener('focusout', () => {
+	// 软键盘收起的事件处理
+	let ua = navigator.userAgent.toLowerCase()
+	if (ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0) {
+		// 键盘收齐页面空白问题
+		document.body.scrollTop = document.body.scrollHeight
+	}
+})
+```
+
+```js
+// 1、如果使用jquery，修改起来就比较方便
+$('input, textarea, select').on('blur', function() {
+	window.scroll(0, 0)
+})
+//2、	如果使用vue，要修改的地方不是很多的话，直接用vue的v-on添加blur事件即可，以input为例
+<input type="text" @blur="fixScroll" placeholder="请输入xxx"/>
+//methods中添加：
+fixScroll() {
+    window.scrolll(0, 0);
+}
+// 如果修改的地方比较多，建议使用addEventListener循环添加事件，在组件销毁记得remove就好，以input为例
+mounted() {
+    var a = document.getElementsByTagName('input'); 
+    for (let i = 0; i < a.length; i++) {    
+        a[i].addEventListener('blur', this.fixScroll); 
+    } 
+},
+destroyed() { ...移除mounted中添加的事件...｝
+methods: {
+    fixScroll() {    
+        window.scrolll(0, 0);   
+    }   
+}
+// 3、因为这个问题只出现在ios端，所以可以在添加事件前判断是不是在ios系统上运行
+var m = navigator.userAgent;
+var isAndroid = m.indexOf('Android') > -1 || m.indexOf('Adr') > -1;   //android终端
+var isIos = !!m.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);                  //ios终端       
+if (isIos) {
+//为input、textarea、select添加blur事件
+}
 ```
