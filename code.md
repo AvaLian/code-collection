@@ -9,6 +9,7 @@
 -   [百度网址统计](#section_baidu)
 -   [让当前的元素滚动到浏览器窗口的可视区域内 scrollIntoView](#section_scrollIntoView)
 -   [苹果设备 h5 页面软键盘收回后页面底部留白问题](#section_iphone)
+-   [打字机效果](#section_print)
 
 ---
 
@@ -65,33 +66,33 @@ scrollIntoView 只接受一个参数，但接受两种类型的参数，分别�
 	<div class="scrollIntoViewIfNeeded-top">scrollIntoViewIfNeeded top</div>
 	<div class="scrollIntoViewIfNeeded-bottom">scrollIntoViewIfNeeded botom</div>
 	<script>
-		const up = document.querySelector('.btn-top')
-		const down = document.querySelector('.btn-bottom')
+		const up = document.querySelector('.btn-top');
+		const down = document.querySelector('.btn-bottom');
 
-		const scrollIntoViewIfNeededTop = document.querySelector('.scrollIntoViewIfNeeded-top')
-		const scrollIntoViewIfNeededBottom = document.querySelector('.scrollIntoViewIfNeeded-bottom')
+		const scrollIntoViewIfNeededTop = document.querySelector('.scrollIntoViewIfNeeded-top');
+		const scrollIntoViewIfNeededBottom = document.querySelector('.scrollIntoViewIfNeeded-bottom');
 
-		const test = document.querySelector('.chunk')
+		const test = document.querySelector('.chunk');
 		up.addEventListener('click', function() {
-			test.scrollIntoView(true)
+			test.scrollIntoView(true);
 			// test.scrollIntoView({
 			// 	block: 'start',
 			// 	behavior: 'smooth',
 			// })
-		})
+		});
 		down.addEventListener('click', function() {
-			test.scrollIntoView(false)
+			test.scrollIntoView(false);
 			// test.scrollIntoView({
 			// 	block: 'end',
 			// 	behavior: 'smooth',
 			// })
-		})
+		});
 		scrollIntoViewIfNeededTop.addEventListener('click', function() {
-			test.scrollIntoViewIfNeeded(true)
-		})
+			test.scrollIntoViewIfNeeded(true);
+		});
 		scrollIntoViewIfNeededBottom.addEventListener('click', function() {
-			test.scrollIntoViewIfNeeded(false)
-		})
+			test.scrollIntoViewIfNeeded(false);
+		});
 	</script>
 </body>
 ```
@@ -106,12 +107,12 @@ scrollIntoView 只接受一个参数，但接受两种类型的参数，分别�
 // 这里监听键盘收起，然后滚动顶部
 document.body.addEventListener('focusout', () => {
 	// 软键盘收起的事件处理
-	let ua = navigator.userAgent.toLowerCase()
+	let ua = navigator.userAgent.toLowerCase();
 	if (ua.indexOf('iphone') > 0 || ua.indexOf('ipad') > 0) {
 		// 键盘收齐页面空白问题
-		document.body.scrollTop = document.body.scrollHeight
+		document.body.scrollTop = document.body.scrollHeight;
 	}
-})
+});
 ```
 
 ```js
@@ -145,4 +146,30 @@ var isIos = !!m.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);                �
 if (isIos) {
 //为input、textarea、select添加blur事件
 }
+```
+
+---
+
+### <a name="section_print"></a>
+
+### 打字机效果
+
+```js
+function text(list) {
+	var arr = [];
+	for (var i = 0; i < list.length; i++) {
+		var nowArr = list[i].split('');
+		arr = arr.concat(nowArr);
+		arr.push('<br/>');
+	}
+	$('#midMoon .text').append('<p></p>');
+	var index = 0;
+	var obj = setInterval(function() {
+		if (index < arr.length) {
+			$('#midMoon .text p').html($('#midMoon .text p').html() + arr[index]);
+		}
+		index++;
+	}, 100);
+}
+text(['又是一年中秋到,', '合家团聚乐陶陶,', '公牛HR祝您阖家欢乐！']);
 ```
