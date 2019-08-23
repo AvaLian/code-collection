@@ -31,7 +31,7 @@ module.exports = {
 			},
 		],
 	],
-}
+};
 ```
 
 上面代码的`useBuiltIns`的`usage`是 `babel7` 的实验性特性，他支持按需加载
@@ -72,6 +72,8 @@ function Test(){...} // a.js  定义模块
 export default Test;
 import Test from './a.js'  //引用模块
 new Test()
+// AMD
+require(['a'],function(){})
 // common.js
 function Test(){...} // a.js  定义模块
 module.exports = Test;
