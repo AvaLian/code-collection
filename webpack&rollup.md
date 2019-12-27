@@ -143,3 +143,19 @@ const config = {
 ```
 
 `htmlWebpackPlugin` 会在打包结束后，自动生成一个 html 文件，并把打包生成的 js 自动引入到这个 html 中
+
+### 自定义库如何在 webpack 里面生成
+
+```js
+const path = require('path');
+module.exports = {
+	mode: 'production',
+	entry: './src.js',
+	output: {
+		path: path.resolve(__dirname, 'dist'),
+		filename: 'library',
+		library: 'library', // 可以使用srcipt标签引用库（在全局变量里面增加library变量）
+		libraryTarget: 'umd', // 可以使用模块化import、commonjs、adm等方式引用库；值还可以为  this、window、 global，但是这样不能用模块化引入
+	},
+};
+```
