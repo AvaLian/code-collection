@@ -6,7 +6,8 @@ CSS 代码总结
 
 ## 目录
 
--   [基础知识](#section_base)
+- [基础知识](#section_base)
+    - [placeholder 输入提示设置](#placeholder 输入提示设置)
 -   [你不知道的 css](#section_css)
 -   [ios](#section_ios)
 
