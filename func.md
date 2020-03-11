@@ -27,9 +27,9 @@
 
 ### 2. window.loaction中的页面调准href和替换replace和刷新reload
 
-  - `window.location.href=“url”：` 改变url地址； 
-  - `window.location.replace(“url”)：` 将地址替换成新url，该方法通过指定URL替换当前缓存在历史里（客户端）的项目，
-    因此当使用replace方法之后，你不能通过“前进”和“后 退”来访问已经被替换的URL(无历史纪录)，这个特点对于做一些过渡页面非常有用！
+  - `window.location.href="url"：` 改变url地址； 
+  - `window.location.replace("url")：` 将地址替换成新url，该方法通过指定URL替换当前缓存在历史里（客户端）的项目，
+    因此当使用replace方法之后，你不能通过"前进"和"后 退"来访问已经被替换的URL(无历史纪录)，这个特点对于做一些过渡页面非常有用！
   - `window.location.reload()：` 强制刷新页面，从服务器重新请求！
     - 相对于点击刷新按钮: 如果把该方法的参数设置为 **true**，那么无论文档的最后修改日期是什么，它都会绕过缓存，从服务器上重新下载该文档。
 
