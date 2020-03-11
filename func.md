@@ -6,8 +6,8 @@
 
 ### 目录
 
-  - [1. Date.parse()和Date.getTime()的区别](#1-Date.parse-和Date.getTime-的区别)
-  - [2. window.loaction中的页面调准href、替换replace、刷新reload](#2-window.loaction中的页面调准href-替换replace-刷新reload)
+  - [1. Date.parse()和Date.getTime()的区别](#1-dateparse---dategettime-----)
+  - [2. window.loaction中的页面调准href、替换replace()、刷新reload()](#2-windowloaction------href---replace-----reload--)
 
 #### 1. Date.parse()和Date.getTime()的区别
 
@@ -22,7 +22,7 @@
   var time1 = Date.parse('2018/07/11');
   ```
 
-#### 2. window.loaction中的页面调准href+替换replace+刷新reload
+#### 2. window.loaction中的页面调准href、替换replace()、刷新reload()
 
   - `window.location.href=“url”：` 改变url地址； 
   - `window.location.replace(“url”)：` 将地址替换成新url，该方法通过指定URL替换当前缓存在历史里（客户端）的项目，
