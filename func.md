@@ -4,12 +4,15 @@
 
 ---
 
-### 目录
+## 目录
 
-  - [1. Date.parse()和Date.getTime()的区别](#1-dateparse---dategettime-----)
-  - [2. window.loaction中的页面调准href、替换replace()、刷新reload()](#2-windowloaction------href---replace-----reload--)
+  - [1. Date.parse和Date.getTime的区别](#1-dateparse和dategettime的区别)
+  - [2. window.loaction中的页面调准href和替换replace和刷新reload](#2-windowloaction中的页面调准href和替换replace和刷新reload)
+  - [3. 倒计时](#3-倒计时)
 
-#### 1. Date.parse()和Date.getTime()的区别
+---
+
+### 1. Date.parse()和Date.getTime()的区别
 
   - `Date.parse()`可解析一个日期时间字符串
   - `Date.getTime()`结合一个 Date 对象来使用
@@ -22,10 +25,37 @@
   var time1 = Date.parse('2018/07/11');
   ```
 
-#### 2. window.loaction中的页面调准href、替换replace()、刷新reload()
+### 2. window.loaction中的页面调准href和替换replace和刷新reload
 
   - `window.location.href=“url”：` 改变url地址； 
   - `window.location.replace(“url”)：` 将地址替换成新url，该方法通过指定URL替换当前缓存在历史里（客户端）的项目，
     因此当使用replace方法之后，你不能通过“前进”和“后 退”来访问已经被替换的URL(无历史纪录)，这个特点对于做一些过渡页面非常有用！
   - `window.location.reload()：` 强制刷新页面，从服务器重新请求！
     - 相对于点击刷新按钮: 如果把该方法的参数设置为 **true**，那么无论文档的最后修改日期是什么，它都会绕过缓存，从服务器上重新下载该文档。
+
+### 3. 倒计时
+  ```js
+  export default {
+    data () {
+      return {
+        state: {
+          time: 60,
+          smsSendBtn: false,
+        }
+      },
+      methods:{
+        countdown(){
+          let that = this;
+          this.state.smsSendBtn = true;
+          let interval = window.setInterval(() => {
+            if (that.state.time-- <= 0) {
+              that.state.time = 60;
+              that.state.smsSendBtn = false;
+              window.clearInterval(interval);
+            }
+          }, 1000);
+        }
+      }
+    }
+  }
+  ```
