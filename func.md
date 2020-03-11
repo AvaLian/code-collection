@@ -7,7 +7,7 @@
 ### 目录
 
   - [1. Date.parse()和Date.getTime()的区别](#1-Date.parse-和Date.getTime-的区别)
-  - [2. window.loaction中的页面调准href、替换replace、刷新reload](#2-window.loaction中的页面调准href+替换replace+刷新reload)
+  - [2. window.loaction中的页面调准href、替换replace、刷新reload](#2-window.loaction中的页面调准href-替换replace-刷新reload)
 
 #### 1. Date.parse()和Date.getTime()的区别
 
