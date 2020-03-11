@@ -6,18 +6,20 @@ CSS 代码总结
 
 ## 目录
 
-- [基础知识](#section_base)
-    - [placeholder 输入提示设置](#placeholder 输入提示设置)
--   [你不知道的 css](#section_css)
--   [ios](#section_ios)
+- [基础知识](#基础-css-总结)
+    1. [placeholder 输入提示设置](#placeholder-输入提示设置)
+    2. [css 单行、多行文本省略号](#css-单行-多行文本省略号)
+    3. [图文不可选择](#图文不可选择)
+    4. [css -表单验证](#css-表单验证)
+- [你不知道的 css](#你未必知道的-49-个-CSS-知识点)
+    1. []()
+- [ios](#section_ios)
 
 ---
 
-### <a name="section_base"></a>
-
 ## 基础 css 总结
 
-### placeholder 输入提示设置
+#### placeholder 输入提示设置
 
 ```css
 :-webkit-input-placeholder {
@@ -42,7 +44,7 @@ CSS 代码总结
 }
 ```
 
-### css 单行、多行文本省略号
+#### css 单行、多行文本省略号
 
 ```css
 .ellipsis {
@@ -66,7 +68,7 @@ CSS 代码总结
 2. 给 `p::after` 添加渐变背景可避免文字只显示一半。
 3. 由于 ie6-7 不显示 content 内容，所以要添加标签兼容 ie6-7（如：<span>…<span/>）；兼容 ie8 需要将::after 替换成`:after`。
 
-### 图文不可选择
+#### 图文不可选择
 
 ```css
 .not-select {
@@ -77,7 +79,7 @@ CSS 代码总结
 }
 ```
 
-### css -表单验证
+#### css -表单验证
 
 `pointer-events`更像是 JavaScript，它能够：阻止用户的点击动作产生任何效果;阻止缺省鼠标指针的显示;阻止 CSS 里的 hover 和 active 状态的变化触发事件;阻止 JavaScript 点击动作触发的事件。
 
@@ -122,7 +124,7 @@ input {
 
 ---
 
-### <a name="section_css"></a>
+<!-- ### <a name="section_css"></a> -->
 
 ## 你未必知道的 49 个 CSS 知识点
 
