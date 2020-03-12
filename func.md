@@ -9,6 +9,7 @@
   - [1. Date.parse和Date.getTime的区别](#1-dateparse和dategettime的区别)
   - [2. window.loaction中的页面调准href和替换replace和刷新reload](#2-windowloaction中的页面调准href和替换replace和刷新reload)
   - [3. 倒计时](#3-倒计时)
+  - [4. 微信授权获取code](#4-微信授权获取code)
 
 ---
 
@@ -59,3 +60,194 @@
     }
   }
   ```
+
+### 4. 微信授权获取code
+
+```html
+<template>
+    <div class="icontent">
+      <template v-if="token">
+        <div>登录成功！</div>
+      </template>
+      <template>
+        <div>登录中...</div>
+      </template>
+    </div>
+</template>
+
+<script>
+  import Vue from 'vue';
+  import store from '@/store'
+  import { getOpenid } from '@/api/login'
+  import axios from 'axios'
+
+  export default {
+    name: "getcode",
+    data () {
+        return {
+            code: '',
+            token: ''
+        }
+    },
+    methods: {
+      // 请求openid的方法，需要后端写法
+      getopenid_data(data) {
+        getOpenid(data).then(response => {
+            // 获取token
+            const data = response.data
+            this.token = data.token
+            localStorage.setItem('token',this.token)
+            store.state.token = this.token
+        })
+      },
+      getUrlParam (name) {
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+        let url = window.location.href.split('#')[0]
+        let search = url.split('?')[1]
+        if (search) {
+            var r = search.substr(0).match(reg)
+            if (r !== null) return unescape(r[2])
+            return null
+        } else {
+            return null
+        }
+      }
+    },
+    created: function() {
+      var code = this.getUrlParam('code')
+      let appid = "wx61dbff19a640ddfd";
+      // let redirectUrl = encodeURIComponent(window.location.href) // 获取页面url
+      let redirectUrl = encodeURIComponent(window.location.href.split('#')[0]) //获取#之前的当前路径
+      if (code == null || code == '') {
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+      } else {
+        this.code = code
+        var data = {
+          code: this.code
+        }
+        this.getopenid_data(data)
+      }
+    }
+  }
+</script>
+```
+```js
+// 请求微信服务器获取code 方法
+function getUserCode() {
+  let appid = "wx61dbff19a640ddfd";
+  // let redirectUrl = encodeURIComponent(window.location.href) // 获取页面url
+  let redirectUrl = encodeURIComponent(window.location.href.split('#')[0]) //获取#之前的当前路径
+  window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+}
+// 路由变化时
+router.beforeEach((to, from, next) => {
+    let code = () => {
+        // 获取暂存的code信息
+        return window.sessionStorage.getItem("weCode")
+    }
+    
+    if(!code){
+        if (to.path !== '/author') {
+            // // 暂存进入链接，以便获取code后返回
+            // window.localStorage.setItem('authUrl', to.fullPath)
+            //保存当前路由地址，授权后还会跳到此地址
+            sessionStorage.setItem('wxRedirectUrl', to.fullPath)
+            next("/author")
+            return false
+        }
+    }
+    
+    next()
+
+  // // 方法二
+
+  //   //读取sessionStorage的user
+  //   let user = JSON.parse(sessionStorage.getItem('user'));
+  //    // 已登录
+  //   if (user) {
+  //     next();//释放路由 如果已经登录
+  //   }
+  //   if (!user) {
+  //     const code = getUrlParam('code');//获取url 上面的code
+  //     // 还未完成微信授权
+  //     if (!code) {//假如没code
+  //         getUserCode();//请求微信服务器获取code
+  //     }
+  //     // 已完成微信授权 假如已经获取到了code
+  //     if (code) {
+  //           //使用code 去登录
+  //         axios.get("/xxxx", {//
+  //             params: {
+  //               code: code,
+  //             }
+  //         }).then(res => {
+  //             if (res.status == 200) {
+  //               let userInfo = res.data.userInfo;
+  //               sessionStorage.setItem('user', JSON.stringify(userInfo));// 存sessionStorage<br>　　　　　　　　　　　　　　　　　　　　 next();
+  //             } else {
+                  
+  //             }
+  //         }).catch(err => {
+  //             //登录失败，请刷新重试
+  //         });
+  //     }
+  // }else{
+  //   next();
+  // }
+})
+```
+author.vue
+```html
+<template>
+  <div>
+授权中。。。
+  </div>
+</template>
+ 
+<script>
+  
+  import {
+   getWxAuth
+  } from '@/service/getData'
+  import {
+   GetQueryString 
+  } from '@/utils/mixin';
+  export default {
+   data() {
+     return {
+      token: '',
+     };
+   },
+   created() {
+     this.token = window.localStorage.getItem("user_token");
+     //判断当前的url有没有token参数,如果不存在那就跳转到微信授权的url
+     //就是前面说的ReturnGetCodeUrl方法
+  
+     if (!GetQueryString("token")) {
+      this.getUserCode();
+     } else {
+      // ......
+      //判断一下后台返回的状态码msg，因为可能出现微信拿不到token的情况
+      let msg = GetQueryString("msg")
+      if (msg = 200) {
+        this.token = GetQueryString("token");
+        //存储token到本地
+        window.localStorage.setItem("user_token", this.token);
+        
+        //获取beforeLoginUrl，我们的前端页面
+        let redirectUrl = sessionStorage.getItem('wxRedirectUrl')
+        this.$router.replace(redirectUrl)
+ 
+        // let url = window.localStorage.getItem("authUrl");
+        // //跳转
+        // this.$router.push(url);
+        // //删除本地beforeLoginUrl
+        // removeLocalStorage("authUrl");
+      }else{
+      //msg不是200的情况，可能跳到404的错误页面
+      }
+     }
+   }
+  }
+</script>
+```
