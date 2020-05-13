@@ -1,11 +1,18 @@
+
 ## VUE 知识点总结
 
 本部分主要是笔者在VUE工作开发时遇到的一些问题所做的笔记，如果出现错误，希望大家指出！
 
 ## 目录
+<!-- TOC -->
 
-* [1. vue中mixins的使用方法和注意点](#1-vue中mixins的使用方法和注意点)
-* [2. vuex存储和本地存储storage的区别](2-vuex存储和本地存储storage的区别)
+- [1. vue中mixins的使用方法和注意点](#1-vue中mixins的使用方法和注意点)
+- [2. vuex存储和本地存储storage的区别](#2-vuex存储和本地存储storage的区别)
+- [3. 深入浅出ES6教程async函数](#3-深入浅出es6教程async函数)
+- [4. npm install-S-D-g的区别](#4-npm-install-s-d-g的区别)
+
+<!-- /TOC -->
+
 
 ### 1. vue中mixins的使用方法和注意点
 
@@ -96,8 +103,8 @@
     而vuex，作为一个实现了flux思想的库，主要为了实现一下功能：
     - 组件之间的数据通信
     - 使用单向数据流的方式进行数据的中心化管理
-  1. `应用场景：` vuex用于组件之间的传值，localstorage，sessionstorage则主要用于不同页面之间的传值。
-  2. `永久性：` 当刷新页面（这里的刷新页面指的是 --> F5刷新,属于清除内存了）时vuex存储的值会丢失，sessionstorage页面关闭后就清除掉了，localstorage不会。  
+  2. `应用场景：` vuex用于组件之间的传值，localstorage，sessionstorage则主要用于不同页面之间的传值。
+  3. `永久性：` 当刷新页面（这里的刷新页面指的是 --> F5刷新,属于清除内存了）时vuex存储的值会丢失，sessionstorage页面关闭后就清除掉了，localstorage不会。  
    
   >注：很多同学觉得用localstorage可以代替vuex, 对于不变的数据确实可以，但是当两个组件共用一个数据源（对象或数组）时，如果其中一个组件改变了该数据源，希望另一个组件响应该变化时，localstorage，sessionstorage无法做到，原因就是区别1。
 
@@ -207,3 +214,56 @@
   }
   readByAsync();
   ```
+
+### 4. npm install-S-D-g的区别
+  
+```
+    npm install module_name -S    即    npm install module_name --save    写入dependencies
+    npm install module_name -D    即    npm install module_name --save-dev 写入devDependencies
+    npm install module_name -g 全局安装(命令行使用)
+    npm install module_name 本地安装(将安装包放在 ./node_modules 下)
+
+    dependencies与devDependencies的区别：
+    devDependencies 里面的插件只用于开发环境，不用于生产环境
+    dependencies 是需要发布到生产环境的
+  ```
+
+### 5、FastClick和Element在IOS下冲突
+#### 使用fastclick后，label>input[type=radio]+span结构(el-radio)，点击文字不能够选中这个radio
+
+```css
+    /* 解决方法: 加上样式 */
+    label > * { pointer-events: none; }
+```
+#### fastclick.js导致input和textarea聚焦难的问题
+
+```js
+FastClick.prototype.focus = function(targetElement) {
+    var length;
+    var deviceIsWindowsPhone = navigator.userAgent.indexOf("Windows Phone") >= 0;
+    var deviceIsIOS = /iP(ad|hone|od)/.test(navigator.userAgent) && !deviceIsWindowsPhone;
+    //兼容处理:在iOS7中，有一些元素（如date、datetime、month等）在setSelectionRange会出现TypeError
+    //这是因为这些元素并没有selectionStart和selectionEnd的整型数字属性，所以一旦引用就会报错，因此排除这些属性才使用setSelectionRange方法
+    if (deviceIsIOS && targetElement.setSelectionRange && targetElement.type.indexOf('date') !== 0 && targetElement.type !== 'time' && targetElement.type !== 'month' && targetElement.type !== 'email') {
+        length = targetElement.value.length;
+        targetElement.setSelectionRange(length, length); //修复bug ios 11.3不弹出键盘，这里加上聚焦代码，让其强制聚焦弹出键盘
+        targetElement.focus();
+    } else {
+        targetElement.focus();
+    }
+}
+```
+#### 升级到ios11.3之后，输入框点击变得不灵敏，第二次点击页面中的输入框需要长按一会才能正常唤起键盘输入
+```js
+FastClick.prototype.focus = function(targetElement) {
+    targetElement.focus();
+};
+```
+#### element ui select下拉框在ios移动端需要点击两次才能选中的问题修复
+``` less
+.el-scrollbar {
+	> .el-scrollbar__bar {
+		opacity: 1 !important;
+	}
+}
+```
