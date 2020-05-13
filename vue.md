@@ -228,7 +228,7 @@
     dependencies 是需要发布到生产环境的
   ```
 
-### 5、FastClick和Element在IOS下冲突
+### 5. FastClick和Element在IOS下冲突
 #### 使用fastclick后，label>input[type=radio]+span结构(el-radio)，点击文字不能够选中这个radio
 
 ```css
@@ -267,24 +267,18 @@ FastClick.prototype.focus = function(targetElement) {
 	}
 }
 ```
-### Android点击事件有背景颜色的问题
-```css
-* {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}   
-```
-### 移动端滑动不顺畅bug
+### 6. 移动端滑动不顺畅bug
 ``` css
 -webkit-overflow-scrolling: touch;
 ```
-### 兼容Promise
+### 7. 兼容Promise
 ```js
 // 类似这种
 if(!window.Promise) {
   document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
 }
 ```
-### 移动端300ms延迟
+### 8. 移动端300ms延迟
 ```html
 <meta name="viewport" content="width=device-width">
 ```
@@ -296,31 +290,25 @@ html {
 ```js
 // fastclick
 ```
-### ios微信键盘收起可能导致input错位的问题
+### 9. ios微信键盘收起可能导致input错位的问题
 ```js
 $("input").on('blur', function() {
   window.scrollTo(0, 0);
 });
 ```
-### 去除input search自带的清除标志
+### 10. 去除input search自带的清除标志
 ``` css
 input[type=search]::-webkit-search-cancel-button{
   -webkit-appearance: none;
 }
 ```
-### 移动端给键盘右下角显示’搜索‘
+### 11. 移动端给键盘右下角显示’搜索‘
 ```html
 <form onsubmit="return false;" action="javascript:return true">
   <input type="search" autocomplete="off" placeholder="搜索关键词" />
 </form>
 ```
-### 移动端touchmove的时候使输入失去焦点
-```js
-$(document).on('touchmove', function() {
-  $('input').blur()
-})
-```
-### bodyScrollLock的使用
+### 12. bodyScrollLock的使用
 ```js
 // 锁死body
 bodyScrollLock.disableBodyScroll(document.querySelector('.poi-history-content'));
@@ -329,7 +317,7 @@ bodyScrollLock.enableBodyScroll(document.querySelector('.poi-history-content'));
 // 清除锁死
 bodyScrollLock.clearAllBodyScrollLocks()
 ```
-### 解决H5页面在iOS网页中的数字被识别为电话号码
+### 13. 解决H5页面在iOS网页中的数字被识别为电话号码
 ```html
 <meta name = "format-detection" content = "telephone=no">
 ```
@@ -341,7 +329,7 @@ setTimeout(() => {
   $("#id").addClass("animation")
 }, 0)
 ```
-### 回退刷新页面
+### 14. 回退刷新页面
 
 ```js
 window.addEventListener('pageshow', function (event) {
@@ -350,12 +338,12 @@ window.addEventListener('pageshow', function (event) {
   }
 })
 ```
-### 解决ios textarea无法输入的问题
+### 15. 解决ios textarea无法输入的问题
 ```js
 $('textarea').attr('contenteditable', true)
 $('textarea').css('-webkit-user-select', 'auto')
 ```
-### 让事件穿透 遮罩层，可以对遮罩层设置css属性
+### 16.让事件穿透 遮罩层，可以对遮罩层设置css属性
 ```js
 pointer-events: none;
 ```
