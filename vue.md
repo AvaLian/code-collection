@@ -267,3 +267,96 @@ FastClick.prototype.focus = function(targetElement) {
 	}
 }
 ```
+### Android点击事件有背景颜色的问题
+```css
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}   
+```
+### 移动端滑动不顺畅bug
+``` css
+-webkit-overflow-scrolling: touch;
+```
+### 兼容Promise
+```js
+// 类似这种
+if(!window.Promise) {
+  document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
+}
+```
+### 移动端300ms延迟
+```html
+<meta name="viewport" content="width=device-width">
+```
+```css
+html {
+  touch-action: manipulation;
+}
+```
+```js
+// fastclick
+```
+### ios微信键盘收起可能导致input错位的问题
+```js
+$("input").on('blur', function() {
+  window.scrollTo(0, 0);
+});
+```
+### 去除input search自带的清除标志
+``` css
+input[type=search]::-webkit-search-cancel-button{
+  -webkit-appearance: none;
+}
+```
+### 移动端给键盘右下角显示’搜索‘
+```html
+<form onsubmit="return false;" action="javascript:return true">
+  <input type="search" autocomplete="off" placeholder="搜索关键词" />
+</form>
+```
+### 移动端touchmove的时候使输入失去焦点
+```js
+$(document).on('touchmove', function() {
+  $('input').blur()
+})
+```
+### bodyScrollLock的使用
+```js
+// 锁死body
+bodyScrollLock.disableBodyScroll(document.querySelector('.poi-history-content'));
+// 解放body
+bodyScrollLock.enableBodyScroll(document.querySelector('.poi-history-content'));
+// 清除锁死
+bodyScrollLock.clearAllBodyScrollLocks()
+```
+### 解决H5页面在iOS网页中的数字被识别为电话号码
+```html
+<meta name = "format-detection" content = "telephone=no">
+```
+### 使用css3 animation keyframe时，在ios上使用了rem产生的位置bug
+```js
+// 使用setTimeout(fn,0),利用js单线程的特性，将加载动画class放在线程最后执行，从而使动画表现正常。
+
+setTimeout(() => {
+  $("#id").addClass("animation")
+}, 0)
+```
+### 回退刷新页面
+
+```js
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted || window.performance && window.performance.navigation.type == 2) {
+    location.reload()
+  }
+})
+```
+### 解决ios textarea无法输入的问题
+```js
+$('textarea').attr('contenteditable', true)
+$('textarea').css('-webkit-user-select', 'auto')
+```
+### 让事件穿透 遮罩层，可以对遮罩层设置css属性
+```js
+pointer-events: none;
+```
+
