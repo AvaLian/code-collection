@@ -1,20 +1,21 @@
 
-## VUE 知识点总结
+# 1. VUE 知识点总结
 
 本部分主要是笔者在VUE工作开发时遇到的一些问题所做的笔记，如果出现错误，希望大家指出！
 
-## 目录
+# 2. 目录
+
 <!-- TOC -->
 
-- [1. vue中mixins的使用方法和注意点](#1-vue中mixins的使用方法和注意点)
-- [2. vuex存储和本地存储storage的区别](#2-vuex存储和本地存储storage的区别)
-- [3. 深入浅出ES6教程async函数](#3-深入浅出es6教程async函数)
-- [4. npm install-S-D-g的区别](#4-npm-install-s-d-g的区别)
+1. [0.1. vue中mixins的使用方法和注意点](#01-vue中mixins的使用方法和注意点)
+2. [0.2. vuex存储和本地存储storage的区别](#02-vuex存储和本地存储storage的区别)
+3. [0.3. 深入浅出ES6教程async函数](#03-深入浅出es6教程async函数)
+4. [0.4. npm install-S-D-g的区别](#04-npm-install-s-d-g的区别)
 
 <!-- /TOC -->
 
 
-### 1. vue中mixins的使用方法和注意点
+### 0.1. vue中mixins的使用方法和注意点
 
   ##### 使用场景
   
@@ -95,7 +96,7 @@
   ```
   >**注意：** 请谨慎使用全局混入，因为它会影响每个单独创建的 Vue 实例 (包括第三方组件)。大多数情况下，只应当应用于自定义选项，就像上面示例一样。推荐将其作为插件发布，以避免重复应用混入。
 
-### 2. vuex存储和本地存储storage的区别 
+### 0.2. vuex存储和本地存储storage的区别 
 
   1. `区别：` vuex存的是状态，存储在内存，localstorage（本地存储）是浏览器提供的接口，让你存的是接口，以文件的形式存储到本地,永久保存；sessionstorage( 会话存储 ) ,临时保存。localStorage和sessionStorage只能存储字符串类型，对于复杂的对象可以使用ECMAScript提供的JSON对象的stringify和parse来处理
    > vuex 用于状态管理，管理的是一个页面中不同的component之间的通信
@@ -108,7 +109,7 @@
    
   >注：很多同学觉得用localstorage可以代替vuex, 对于不变的数据确实可以，但是当两个组件共用一个数据源（对象或数组）时，如果其中一个组件改变了该数据源，希望另一个组件响应该变化时，localstorage，sessionstorage无法做到，原因就是区别1。
 
-### 3. 深入浅出ES6教程async函数
+### 0.3. 深入浅出ES6教程async函数
 
   async函数的特点
 
@@ -215,7 +216,7 @@
   readByAsync();
   ```
 
-### 4. npm install-S-D-g的区别
+### 0.4. npm install-S-D-g的区别
   
 ```
     npm install module_name -S    即    npm install module_name --save    写入dependencies
@@ -228,63 +229,66 @@
     dependencies 是需要发布到生产环境的
   ```
 
-### 5. FastClick和Element在IOS下冲突
-#### 使用fastclick后，label>input[type=radio]+span结构(el-radio)，点击文字不能够选中这个radio
+### FastClick和Element在IOS下冲突
+
+使用fastclick后，label>input[type=radio]+span结构(el-radio)，点击文字不能够选中这个radio
 
 ```css
-    /* 解决方法: 加上样式 */
-    label > * { pointer-events: none; }
+/* 解决方法: 加上样式 */
+label > * { pointer-events: none; }
 ```
 #### fastclick.js导致input和textarea聚焦难的问题
 
 ```js
 FastClick.prototype.focus = function(targetElement) {
-    var length;
-    var deviceIsWindowsPhone = navigator.userAgent.indexOf("Windows Phone") >= 0;
-    var deviceIsIOS = /iP(ad|hone|od)/.test(navigator.userAgent) && !deviceIsWindowsPhone;
-    //兼容处理:在iOS7中，有一些元素（如date、datetime、month等）在setSelectionRange会出现TypeError
-    //这是因为这些元素并没有selectionStart和selectionEnd的整型数字属性，所以一旦引用就会报错，因此排除这些属性才使用setSelectionRange方法
-    if (deviceIsIOS && targetElement.setSelectionRange && targetElement.type.indexOf('date') !== 0 && targetElement.type !== 'time' && targetElement.type !== 'month' && targetElement.type !== 'email') {
-        length = targetElement.value.length;
-        targetElement.setSelectionRange(length, length); //修复bug ios 11.3不弹出键盘，这里加上聚焦代码，让其强制聚焦弹出键盘
-        targetElement.focus();
-    } else {
-        targetElement.focus();
-    }
+var length;
+var deviceIsWindowsPhone = navigator.userAgent.indexOf("Windows Phone") >= 0;
+var deviceIsIOS = /iP(ad|hone|od)/.test(navigator.userAgent) && !deviceIsWindowsPhone;
+//兼容处理:在iOS7中，有一些元素（如date、datetime、month等）在setSelectionRange会出现TypeError
+//这是因为这些元素并没有selectionStart和selectionEnd的整型数字属性，所以一旦引用就会报错，因此排除这些属性才使用setSelectionRange方法
+if (deviceIsIOS && targetElement.setSelectionRange && targetElement.type.indexOf('date') !== 0 && targetElement.type !== 'time' && targetElement.type !== 'month' && targetElement.type !== 'email') {
+    length = targetElement.value.length;
+    targetElement.setSelectionRange(length, length); //修复bug ios 11.3不弹出键盘，这里加上聚焦代码，让其强制聚焦弹出键盘
+    targetElement.focus();
+} else {
+    targetElement.focus();
+}
 }
 ```
-#### 升级到ios11.3之后，输入框点击变得不灵敏，第二次点击页面中的输入框需要长按一会才能正常唤起键盘输入
+升级到ios11.3之后，输入框点击变得不灵敏，第二次点击页面中的输入框需要长按一会才能正常唤起键盘输入
+
 ```js
 FastClick.prototype.focus = function(targetElement) {
-    targetElement.focus();
+targetElement.focus();
 };
 ```
-#### element ui select下拉框在ios移动端需要点击两次才能选中的问题修复
+element ui select下拉框在ios移动端需要点击两次才能选中的问题修复
+
 ``` less
 .el-scrollbar {
-	> .el-scrollbar__bar {
-		opacity: 1 !important;
-	}
+> .el-scrollbar__bar {
+    opacity: 1 !important;
+}
 }
 ```
-### 6. 移动端滑动不顺畅bug
+### 移动端滑动不顺畅bug
 ``` css
 -webkit-overflow-scrolling: touch;
 ```
-### 7. 兼容Promise
+### 兼容Promise
 ```js
 // 类似这种
 if(!window.Promise) {
-  document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
+document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
 }
 ```
-### 8. 移动端300ms延迟
+### 移动端300ms延迟
 ```html
 <meta name="viewport" content="width=device-width">
 ```
 ```css
 html {
-  touch-action: manipulation;
+touch-action: manipulation;
 }
 ```
 ```js
@@ -293,19 +297,19 @@ html {
 ### 9. ios微信键盘收起可能导致input错位的问题
 ```js
 $("input").on('blur', function() {
-  window.scrollTo(0, 0);
+window.scrollTo(0, 0);
 });
 ```
 ### 10. 去除input search自带的清除标志
 ``` css
 input[type=search]::-webkit-search-cancel-button{
-  -webkit-appearance: none;
+-webkit-appearance: none;
 }
 ```
 ### 11. 移动端给键盘右下角显示’搜索‘
 ```html
 <form onsubmit="return false;" action="javascript:return true">
-  <input type="search" autocomplete="off" placeholder="搜索关键词" />
+<input type="search" autocomplete="off" placeholder="搜索关键词" />
 </form>
 ```
 ### 12. bodyScrollLock的使用
@@ -326,16 +330,16 @@ bodyScrollLock.clearAllBodyScrollLocks()
 // 使用setTimeout(fn,0),利用js单线程的特性，将加载动画class放在线程最后执行，从而使动画表现正常。
 
 setTimeout(() => {
-  $("#id").addClass("animation")
+$("#id").addClass("animation")
 }, 0)
 ```
 ### 14. 回退刷新页面
 
 ```js
 window.addEventListener('pageshow', function (event) {
-  if (event.persisted || window.performance && window.performance.navigation.type == 2) {
-    location.reload()
-  }
+if (event.persisted || window.performance && window.performance.navigation.type == 2) {
+location.reload()
+}
 })
 ```
 ### 15. 解决ios textarea无法输入的问题
