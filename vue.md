@@ -4,13 +4,12 @@
 本部分主要是笔者在VUE工作开发时遇到的一些问题所做的笔记，如果出现错误，希望大家指出！
 
 # 2. 目录
-
 <!-- TOC -->
 
-1. [0.1. vue中mixins的使用方法和注意点](#01-vue中mixins的使用方法和注意点)
-2. [0.2. vuex存储和本地存储storage的区别](#02-vuex存储和本地存储storage的区别)
-3. [0.3. 深入浅出ES6教程async函数](#03-深入浅出es6教程async函数)
-4. [0.4. npm install-S-D-g的区别](#04-npm-install-s-d-g的区别)
+- [0.1. vue中mixins的使用方法和注意点](#01-vue中mixins的使用方法和注意点)
+- [0.2. vuex存储和本地存储storage的区别](#02-vuex存储和本地存储storage的区别)
+- [0.3. 深入浅出ES6教程async函数](#03-深入浅出es6教程async函数)
+- [0.4. npm install-S-D-g的区别](#04-npm-install-s-d-g的区别)
 
 <!-- /TOC -->
 
@@ -228,6 +227,12 @@
     devDependencies 里面的插件只用于开发环境，不用于生产环境
     dependencies 是需要发布到生产环境的
   ```
+
+### 0.5. test
+
+```html
+<!-- this is test -->
+```
 
 ### FastClick和Element在IOS下冲突
 

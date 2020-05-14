@@ -583,5 +583,65 @@ outline: 1px solid rgba(255, 255, 255, 0);
     -   Helvetica,Arial，在针对不同操作系统不同平台设定采用默认系统字体后，针对一些低版本浏览器的降级方案
     -   sans-serif，兜底方案，保证字体风格统一，至少也得是无衬线字体
 
+### 使用caret-color改变光标颜色
+
 ```css
+.input1 {
+  caret-color: red;
+}
+.input2 {
+  caret-color: blue;
+}
+```
+``` html
+<input type="text" name="" class="input1">
+<input type="text" name="" class="input2">
+```
+
+### pointer-events禁用事件触发
+
+通过`pointer-events:none`禁用事件触发(默认事件、冒泡事件、鼠标事件、键盘事件等)，相当于`disabled` 场景：限时点击按钮(发送验证码倒计时)、事件冒泡禁用(多个元素重叠且自带事件、a标签跳转)
+```html
+<ul>
+    <li><a href="https://developer.mozilla.org/">MDN</a></li>
+    <li><a href="http://example.com">example.com</a></li>
+</ul>
+```
+```css
+a[href="http://example.com"] {
+    pointer-events: none;
+}
+```
+
+### 标题两边的小横杠
+
+```html
+<div class="title">标题</div>
+```
+
+```css
+.title {
+  color: #e1767c;
+  font-size: 30px;
+  text-align: center;
+  position: relative;
+}
+.title:before,
+.title:after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+  border-top: 2px solid #e1767c;
+  width: 40px;
+}
+.title:before {
+  margin-left: -60px;
+}
+.title:after {
+  margin-left: 60px;
+}
 ```
