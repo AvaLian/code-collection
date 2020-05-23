@@ -4,16 +4,21 @@
 
 ---
 
-## 目录
+# 目录
+<!-- TOC -->
 
--   [百度网址统计](#section_baidu)
--   [让当前的元素滚动到浏览器窗口的可视区域内 scrollIntoView](#section_scrollIntoView)
--   [苹果设备 h5 页面软键盘收回后页面底部留白问题](#section_iphone)
--   [打字机效果](#section_print)
+- [百度网址统计](#百度网址统计)
+- [让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`](#让当前的元素滚动到浏览器窗口的可视区域内-elementscrollintoview)
+- [苹果设备 h5 页面软键盘收回后页面底部留白问题](#苹果设备-h5-页面软键盘收回后页面底部留白问题)
+- [打字机效果](#打字机效果)
+- [定时轮询拉取数据](#定时轮询拉取数据)
+- [axios 拦截器与取消 pending 状态请求](#axios-拦截器与取消-pending-状态请求)
+- [Vue使用axios,终止多次请求方式,防抖](#vue使用axios终止多次请求方式防抖)
+
+<!-- /TOC -->
 
 ---
 
-### <a name="section_baidu"></a>
 
 ### 百度网址统计
 
@@ -32,8 +37,6 @@
 ```
 
 ---
-
-### <a name="section_scrollIntoView"></a>
 
 ### 让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`
 
@@ -99,7 +102,6 @@ scrollIntoView 只接受一个参数，但接受两种类型的参数，分别�
 
 ---
 
-### <a name="section_iphone"></a>
 
 ### 苹果设备 h5 页面软键盘收回后页面底部留白问题
 
@@ -150,7 +152,6 @@ if (isIos) {
 
 ---
 
-### <a name="section_print"></a>
 
 ### 打字机效果
 
@@ -172,4 +173,282 @@ function text(list) {
 	}, 100);
 }
 text(['又是一年中秋到,', '合家团聚乐陶陶,', '公牛HR祝您阖家欢乐！']);
+```
+
+### 定时轮询拉取数据
+```js
+setInterval(function(){}, milliseconds)——会不停的调用函数
+setTimeout(function(){}, milliseconds)——只执行函数一次
+//setInterval会符合我们的业务需求，然而也需要注意一些坑，单纯的使用setInterval会导致页面卡死！其原因与JS引擎线程有关，用通俗话说就是setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加，最终卡死你的网页。但是setTimeout是自带清除定时器的，因此正确解决方法如下：
+window.setInterval(() => {
+  setTimeout(fun, 0)
+}, 30000)
+```
+
+```js
+// setTimeout能阻止某些重复性操作
+// 如果我们能捕获到异常，可以限定异常大于10次时，我们将不再拉取数据，并且在异常 》1 且 《10 时，我们可以适当将间隔拉大，让服务器有休息的时间。
+var failed = 0; 
+
+(function loopsiloop( interval ){
+   interval = interval || 5000; // default polling to 1 second
+
+   setTimeout(function(){
+       $.ajax({
+           url: 'foo.htm',
+           success: function( response ){
+               // do something with the response
+
+               loopsiloop(); // recurse
+           },
+           error: function(){
+
+               // only recurse while there's less than 10 failed requests.
+               // otherwise the server might be down or is experiencing issues.
+               if( ++failed < 10 ){
+
+                   // give the server some breathing room by
+                   // increasing the interval
+                   interval = interval + 1000;
+                   loopsiloop( interval );
+               }
+           }
+       });
+   }, interval);
+})();
+```
+
+### axios 拦截器与取消 pending 状态请求
+```js
+/**
+ * axios 拦截器配置
+ */
+
+import axios from 'axios'
+import { Notification } from 'element-ui'
+import router from '../router/index.js'
+
+// 跳转到登录页面
+const gotoLoginPage = function () {
+  // 使用 setTimeout 是为了让 Notification 提示显示出来再跳转
+  setTimeout(() => {
+    router.replace(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`)
+  }, 1000)
+}
+
+axios.defaults.timeout = 5000 // 默认的超时时间
+axios.defaults.withCredentials = true // 表示跨域请求时是否需要使用凭证
+
+/**
+ * 正在进行（pending 状态）的请求记录
+ */
+// 记录所有正在进行（pending 状态）的请求的 "唯一值" 和 "取消请求方法"
+const allPendingRequestsRecord = []
+/**
+ * 通过请求的 url 和 method 来标示请求唯一值
+ * @param {*} config 配置信息
+ * @returns
+ */
+function getUniqueId (config) {
+  return `url=${config.url}&method=${config.method}`
+}
+/**
+ * 取消请求，并移除记录
+ * @param {*} config 配置信息
+ */
+function removePendingRequestRecord (config) {
+  allPendingRequestsRecord.some((item, index) => {
+    if (item.id === getUniqueId(config)) {
+      // console.log('-- cancel id:', item.id)
+      item.cancel() // 取消请求
+      allPendingRequestsRecord.splice(index, 1) // 移除记录
+      return true
+    }
+  })
+  // console.log('-- allPendingRequestsRecord:', allPendingRequestsRecord.length, JSON.stringify(allPendingRequestsRecord))
+}
+/**
+ * 取消所有请求并移除所有记录
+ *
+ * 页面切换时，取消所有请求并移除所有记录 useAge:
+ *    import {removeAllPendingRequestsRecord} from './helper/axios';
+ *    router.beforeEach((to, from, next) => {
+ *      removeAllPendingRequestsRecord();
+ *    }
+ */
+export function removeAllPendingRequestsRecord () {
+  allPendingRequestsRecord.forEach((item) => {
+    item.cancel('page changes') // 取消请求
+  })
+  allPendingRequestsRecord.splice(0) // 移除所有记录
+}
+
+// 添加请求拦截器
+axios.interceptors.request.use(
+  config => {
+    // 在发送请求之前做些什么
+
+    // 在 get 请求上带上时间戳
+    if (config.method === 'get') {
+      config.url = config.url + '?' + new Date().getTime()
+    }
+
+    // 通过添加随机 uniqueCancel 值，确保每个请求具有唯一标示
+    config.url = `${config.url}?uniqueCancel_${Math.random().toString(36).substr(2)}`
+
+    // 在请求发送前执行一下取消操作，防止重复发送请求（dashboard 类似页面具有重复多次的相同请求，所有不能在全局做防止重复）
+    // removePendingRequestRecord(config)
+
+    // 设置请求的 cancelToken
+    config.cancelToken = new axios.CancelToken(function executor (cancel) {
+      // 添加记录，记录请求的唯一值和取消方法
+      allPendingRequestsRecord.push({ id: getUniqueId(config), cancel })
+    })
+    // console.log('-- request config:', config)
+
+    return config
+  },
+  error => {
+    // 对请求错误做些什么
+    Promise.reject(error)
+  }
+)
+// 添加响应拦截器
+axios.interceptors.response.use(
+  res => {
+    // 对响应数据做点什么
+
+    // 307 表示 session 过期，需要重新登录
+    if (res.status === 200 && res.data.code === 307) {
+      removeAllPendingRequestsRecord()
+      Notification.info({
+        title: '消息',
+        message: '登录失效，请重新登录'
+      })
+
+      // 移除菜单和权限信息
+      localStorage.removeItem('menus')
+      localStorage.removeItem('buttons')
+      sessionStorage.removeItem('isLoadNodes')
+      // window.location.href = (res.data.content && res.data.content.loginPath) || '/enmoLogin'
+      gotoLoginPage()
+
+      return Promise.reject(res)
+    }
+
+    // 请求成功后移除记录
+    removePendingRequestRecord(res.config)
+
+    if (!res.data) {
+      return Promise.reject(res)
+    }
+
+    return res
+  },
+  error => {
+    // 对响应错误做点什么
+
+    if (error && error.response) {
+      switch (error.response.status) {
+        case 400:
+          error.message = '错误信息：' + '请求参数错误'
+          break
+        case 401:
+          // 401 说明登录验证失败，需要重新验证
+          error.message = '未登录'
+          removeAllPendingRequestsRecord()
+          gotoLoginPage()
+
+          break
+        case 402:
+          error.message = '错误信息：您还没有该路径的访问权限'
+          break
+        case 404:
+          error.message = '错误信息：请求地址出错'
+          break
+        case 500:
+          error.message = 'message：' + error.response.data.message + '，exception：' + error.response.data.exception
+          break
+        case 502:
+          error.message = '错误信息：网关错误'
+          break
+        case 504:
+          error.message = '错误信息：网关超时'
+          break
+        default:
+      }
+
+      Notification({
+        title: '错误码:' + error.response.status,
+        dangerouslyUseHTMLString: true,
+        message: error.message,
+        type: 'error'
+      })
+    }
+
+    // 请求失败，移除记录
+    removePendingRequestRecord(error.response.config)
+
+    return Promise.reject(error)
+  }
+)
+
+// Plugin 包装
+const axiosPlugin = {
+  install (Vue) {
+    Vue.prototype.$http = axios
+    Vue.prototype.$base = '/commonApi'
+    Vue.prototype.$mock = '/mockApi'
+  }
+}
+
+export default axiosPlugin
+
+// 测试 Plugin 包装:
+//   this.$http.get(`${ this.$base }/dbaasDbManage/instance`, {params: {
+//     pageSize: 15,
+//     pageNum: 1,
+//     queryFiled: ''
+//   }}).then(function(res){
+//     console.log('-- res.data field:', res.data);
+//   },function(res){
+//     console.log('-- res.status field:', res.status);
+//   });
+
+// 测试 Mock 接口:
+// this.$http.get(`${this.$mock}/dbaas/getMockInfo`).then(function (res) {
+//   console.log('-- res.data field:', res.data)
+// }, function (res) {
+//   console.log('-- res.status field:', res.status)
+// })
+```
+### Vue使用axios,终止多次请求方式,防抖
+```js
+// 在项目中经常有一些场景会连续发送多个请求，而异步会导致最后得到的结果不是我们想要的，并且对性能也有非常大的影响。例如一个搜索框，每输入一个字符都要发送一次请求，但输入过快的时候其实前面的请求并没有必要真的发送出去，这时候就需要在发送新请求的时候直接取消上一次请求。
+request(keyword) {
+	var CancelToken = axios.CancelToken
+	var source = CancelToken.source()
+	// 取消上一次请求
+	this.cancelRequest();
+	axios.post(url, {kw:keyword), {
+			cancelToken: new axios.CancelToken(function(c) {
+					that.source = c;
+			})
+	}).then((res)=> {
+		// 在这里处理得到的数据
+		...
+	}).catch((err) =>{
+		if (axios.isCancel(err)) {
+				console.log('Rquest canceled', err.message); //请求如果被取消，这里是返回取消的message
+		} else {
+				//handle error
+				console.log(err);
+		}
+	})
+},
+cancelRequest(){
+		if(typeof this.source ==='function'){
+				this.source('终止请求')
+		}
+}
 ```

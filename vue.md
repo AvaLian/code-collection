@@ -356,4 +356,17 @@ $('textarea').css('-webkit-user-select', 'auto')
 ```js
 pointer-events: none;
 ```
-
+### vue cli3中用axios加载本地文件
+```js
+// 1、文件放在public下面
+// 2、加载地址 '/public/...文件'
+axios.get('/public/test.json').then(res=>{})
+```
+### vue cli3内存不够
+```js
+// step1 安装依赖
+yarn add increase-memory-limit -D
+yarn add cross-env -D 
+// 第二步 在package.json的script里面配置
+"fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
+```
