@@ -10,7 +10,18 @@
   - [2. window.loaction中的页面调准href和替换replace和刷新reload](#2-windowloaction中的页面调准href和替换replace和刷新reload)
   - [3. 倒计时](#3-倒计时)
   - [4. 微信授权获取code](#4-微信授权获取code)
+<!-- TOC -->
 
+- [常用方法总结](#常用方法总结)
+- [目录](#目录)
+- [](#)
+  - [1. Date.parse()和Date.getTime()的区别](#1-dateparse和dategettime的区别)
+  - [2. window.loaction中的页面调准href和替换replace和刷新reload](#2-windowloaction中的页面调准href和替换replace和刷新reload)
+  - [3. 倒计时](#3-倒计时)
+  - [4. 微信授权获取code](#4-微信授权获取code)
+  - [js字符串转为数组的几种方法](#js字符串转为数组的几种方法)
+
+<!-- /TOC -->
 ---
 
 ### 1. Date.parse()和Date.getTime()的区别
@@ -250,4 +261,15 @@ author.vue
    }
   }
 </script>
+```
+
+### js字符串转为数组的几种方法
+
+```js
+var a ='abcde'
+
+a.split('') // ["a", "b", "c", "d", "e"]
+Object.values(a) // ["a", "b", "c", "d", "e"]
+Array.from(a) // ["a", "b", "c", "d", "e"]
+[...a]  // ["a", "b", "c", "d", "e"]
 ```

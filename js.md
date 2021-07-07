@@ -186,11 +186,10 @@
    ```
 
 
-#### 2. JavaScript 有几种类型的值？你能画一下他们的内存图吗？
-   
+#### 2. JavaScript 有几种类型的值？你能画一下他们的内存(/img/jsbbbi
    涉及知识点：
    ```
-   栈：原始数据类型（Undefined、Null、Boolean、Number、String）
+   栈：原始数据类型（Undefined、Null、Boolean、Number、String、Symbol\）
    堆：引用数据类型（对象、数组和函数）
 
    两种类型的区别是：存储位置不同。

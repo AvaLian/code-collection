@@ -1,4 +1,5 @@
 
+
 # 1. VUE 知识点总结
 
 本部分主要是笔者在VUE工作开发时遇到的一些问题所做的笔记，如果出现错误，希望大家指出！
@@ -9,7 +10,24 @@
 - [0.1. vue中mixins的使用方法和注意点](#01-vue中mixins的使用方法和注意点)
 - [0.2. vuex存储和本地存储storage的区别](#02-vuex存储和本地存储storage的区别)
 - [0.3. 深入浅出ES6教程async函数](#03-深入浅出es6教程async函数)
-- [0.4. npm install-S-D-g的区别](#04-npm-install-s-d-g的区别)
+- [4 npm install-S-D-g的区别](#4-npm-install-s-d-g的区别)
+- [5、FastClick和Element在IOS下冲突](#5fastclick和element在ios下冲突)
+  - [fastclick.js导致input和textarea聚焦难的问题](#fastclickjs导致input和textarea聚焦难的问题)
+- [6、移动端滑动不顺畅bug](#6移动端滑动不顺畅bug)
+- [7、兼容Promise](#7兼容promise)
+- [8、移动端300ms延迟](#8移动端300ms延迟)
+- [9. ios微信键盘收起可能导致input错位的问题](#9-ios微信键盘收起可能导致input错位的问题)
+- [10. 去除input search自带的清除标志](#10-去除input-search自带的清除标志)
+- [11. 移动端给键盘右下角显示’搜索‘](#11-移动端给键盘右下角显示搜索)
+- [12. bodyScrollLock的使用](#12-bodyscrolllock的使用)
+- [13. 解决H5页面在iOS网页中的数字被识别为电话号码](#13-解决h5页面在ios网页中的数字被识别为电话号码)
+- [使用css3 animation keyframe时，在ios上使用了rem产生的位置bug](#使用css3-animation-keyframe时在ios上使用了rem产生的位置bug)
+- [14. 回退刷新页面](#14-回退刷新页面)
+- [15. 解决ios textarea无法输入的问题](#15-解决ios-textarea无法输入的问题)
+- [16.让事件穿透 遮罩层，可以对遮罩层设置css属性](#16让事件穿透-遮罩层可以对遮罩层设置css属性)
+- [17、vue cli3中用axios加载本地文件](#17vue-cli3中用axios加载本地文件)
+- [18、vue cli3内存不够](#18vue-cli3内存不够)
+- [19、vue项目在关闭浏览器时候向后台发送请求失败问题解决](#19vue项目在关闭浏览器时候向后台发送请求失败问题解决)
 
 <!-- /TOC -->
 
@@ -215,9 +233,9 @@
   readByAsync();
   ```
 
-### 0.4. npm install-S-D-g的区别
+### 4 npm install-S-D-g的区别
   
-```
+```js
     npm install module_name -S    即    npm install module_name --save    写入dependencies
     npm install module_name -D    即    npm install module_name --save-dev 写入devDependencies
     npm install module_name -g 全局安装(命令行使用)
@@ -226,15 +244,11 @@
     dependencies与devDependencies的区别：
     devDependencies 里面的插件只用于开发环境，不用于生产环境
     dependencies 是需要发布到生产环境的
-  ```
-
-### 0.5. test
-
-```html
-<!-- this is test -->
 ```
 
-### FastClick和Element在IOS下冲突
+
+
+### 5、FastClick和Element在IOS下冲突
 
 使用fastclick后，label>input[type=radio]+span结构(el-radio)，点击文字不能够选中这个radio
 
@@ -276,18 +290,18 @@ element ui select下拉框在ios移动端需要点击两次才能选中的问题
 }
 }
 ```
-### 移动端滑动不顺畅bug
+### 6、移动端滑动不顺畅bug
 ``` css
 -webkit-overflow-scrolling: touch;
 ```
-### 兼容Promise
+### 7、兼容Promise
 ```js
 // 类似这种
 if(!window.Promise) {
 document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
 }
 ```
-### 移动端300ms延迟
+### 8、移动端300ms延迟
 ```html
 <meta name="viewport" content="width=device-width">
 ```
@@ -356,17 +370,38 @@ $('textarea').css('-webkit-user-select', 'auto')
 ```js
 pointer-events: none;
 ```
-### vue cli3中用axios加载本地文件
+### 17、vue cli3中用axios加载本地文件
 ```js
 // 1、文件放在public下面
 // 2、加载地址 '/public/...文件'
 axios.get('/public/test.json').then(res=>{})
 ```
-### vue cli3内存不够
+### 18、vue cli3内存不够
 ```js
 // step1 安装依赖
 yarn add increase-memory-limit -D
 yarn add cross-env -D 
 // 第二步 在package.json的script里面配置
 "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
+```
+
+### 19、vue项目在关闭浏览器时候向后台发送请求失败问题解决
+```js
+    // 浏览器窗口关闭
+    window.addEventListener("beforeunload", e => {
+      console.log(e);
+      // 弹出确认关闭提示框，延长关闭时间，否则请求发送不成功，不会被后台接收
+      // 兼容IE8和Firefox 4之前的版本
+      e = e || window.event;
+      if (e) {
+        e.returnValue = "关闭提示";
+      }
+      // 1、在IE中这个事件你只要去关闭窗口就触发。
+      // 2、谷歌、火狐等在F12调试模式中也会起效
+      // 3、谷歌、火狐、QQ等浏览器中被优化了，需要用户在页面有过任何操作才会出现提示！（坑）。
+      mdLeaveReport();
+      // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+      return "关闭提示";
+    });
+  }
 ```

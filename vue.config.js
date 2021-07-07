@@ -8,13 +8,17 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const productionGzipExtensions = ['js', 'css']
 const resolve = dir => path.resolve(__dirname, dir)
 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
+
 module.exports = {
     publicPath: './', // 默认'/'，部署应用包时的基本 URL
     outputDir: 'dist', // 'dist', 生产环境构建文件的目录
-    assetsDir: '',  // 相对于outputDir的静态资源(js、css、img、fonts)目录
+    assetsDir: '', // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
-    productionSourceMap: false,  // 生产环境的 source map
+    productionSourceMap: false, // 生产环境的 source map
     // CSS 相关选项
     css: {
         // 将组件内的 CSS 提取到一个单独的 CSS 文件 (只用在生产环境中)
@@ -39,6 +43,58 @@ module.exports = {
     pwa: {},
 
     chainWebpack: config => {
+        // 删除无用的插件，避免加载多余的资源（如果不删除的话，则会在 index.html 里面加载 无用的 js 文件）
+        // 移除 prefetch 插件
+        config.plugins.delete('prefetch');
+        // 移除 preload 插件，避免加载多余的资源
+        config.plugins.delete('preload');
+
+        config.optimization.minimize(true);
+
+        config.optimization.splitChunks({
+            chunks: 'all'
+        })
+
+        // 展示图形化分析信息
+        config
+            .plugin('webpack-bundle-analyzer')
+            .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+
+        if (process.env.NODE_ENV !== 'development') {
+
+            // 抽离 css 支持按需加载
+            let miniCssExtractPlugin = new MiniCssExtractPlugin({
+                filename: 'assets/[name].[hash:8].css',
+                chunkFilename: 'assets/[name].[hash:8].css'
+            })
+            config.plugin('extract-css').use(miniCssExtractPlugin)
+            config.plugin("loadshReplace").use(new LodashModuleReplacementPlugin());
+
+            // 图片按需加载
+            config.module.rule('images')
+                .test(/\.(png|jpe?g|gif|webp)(\?.*)?$/)
+                .use('image-webpack-loader')
+                .loader('image-webpack-loader')
+                .options({
+                    bypassOnDebug: true
+                })
+                .end()
+                .use('url-loader')
+                .loader('file-loader')
+                .options({
+                    name: 'assets/[name].[hash:8].[ext]'
+                }).end()
+            config.module.rule('svg')
+                .test(/\.(svg)(\?.*)?$/)
+                .use('file-loader')
+                .loader('file-loader')
+                .options({
+                    name: 'assets/[name].[hash:8].[ext]'
+                })
+        }
+
+
+
         // 修复HMR
         config.resolve.symlinks(true);
         //修复 Lazy loading routes Error
@@ -71,6 +127,48 @@ module.exports = {
     },
     configureWebpack: config => {
 
+        // config.plugins.push(["equire"]);
+
+        if (process.env.NODE_ENV !== 'development') {
+            config.output.filename = 'assets/[name].[hash:8].js'
+            config.output.chunkFilename = 'assets/[name].[hash:8].js'
+        }
+        // 公共代码抽离
+        config.optimization = {
+            // 分割代码块
+            splitChunks: {
+                cacheGroups: {
+                    //公用模块抽离
+                    common: {
+                        chunks: 'initial',
+                        minSize: 0, //大于0个字节
+                        minChunks: 2, //抽离公共代码时，这个代码块最小被引用的次数
+                    },
+                    //第三方库抽离
+                    vendor: {
+                        priority: 1, //权重
+                        test: /node_modules/,
+                        chunks: 'initial',
+                        minSize: 0, //大于0个字节
+                        minChunks: 2, //在分割之前，这个代码块最小应该被引用的次数
+                    },
+                },
+            }
+        }
+        // 开启gzip压缩
+        config.plugins.push(
+            new CompressionWebpackPlugin({
+                filename: info => {
+                    return `${info.path}.gz${info.query}`
+                },
+                algorithm: 'gzip',
+                threshold: 10240, // 只有大小大于该值的资源会被处理 10240
+                test: new RegExp('\\.(' + ['js'].join('|') + ')$'),
+                minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
+                deleteOriginalAssets: false // 删除原文件
+            })
+        )
+
         if (IS_PROD) {
             const plugins = []
             plugins.push(
@@ -84,7 +182,7 @@ module.exports = {
                         },
                         mangle: false,
                         output: {
-                            beautify: true,//压缩注释
+                            beautify: true, //压缩注释
                         }
                     },
                     sourceMap: false,
@@ -109,7 +207,7 @@ module.exports = {
                             warnings: true,
                             drop_console: true,
                             drop_debugger: true,
-                            pure_funcs: ['console.log']//移除console
+                            pure_funcs: ['console.log'] //移除console
                         }
                     },
                     sourceMap: false,

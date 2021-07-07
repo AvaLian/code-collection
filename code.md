@@ -7,20 +7,25 @@
 # 目录
 <!-- TOC -->
 
-- [百度网址统计](#百度网址统计)
-- [让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`](#让当前的元素滚动到浏览器窗口的可视区域内-elementscrollintoview)
-- [苹果设备 h5 页面软键盘收回后页面底部留白问题](#苹果设备-h5-页面软键盘收回后页面底部留白问题)
-- [打字机效果](#打字机效果)
-- [定时轮询拉取数据](#定时轮询拉取数据)
-- [axios 拦截器与取消 pending 状态请求](#axios-拦截器与取消-pending-状态请求)
-- [Vue使用axios,终止多次请求方式,防抖](#vue使用axios终止多次请求方式防抖)
+- [userful代码片段](#userful代码片段)
+  - [0.1. 百度网址统计](#01-百度网址统计)
+  - [0.2. 让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`](#02-让当前的元素滚动到浏览器窗口的可视区域内-elementscrollintoview)
+  - [0.3. 苹果设备 h5 页面软键盘收回后页面底部留白问题](#03-苹果设备-h5-页面软键盘收回后页面底部留白问题)
+  - [0.4. 打字机效果](#04-打字机效果)
+- [项目中有用代码片段](#项目中有用代码片段)
+  - [0.5. 定时轮询拉取数据](#05-定时轮询拉取数据)
+  - [0.6. axios 拦截器与取消 pending 状态请求](#06-axios-拦截器与取消-pending-状态请求)
+  - [0.7. Vue使用axios,终止多次请求方式,防抖](#07-vue使用axios终止多次请求方式防抖)
+  - [0.8. vue刷新当前页面](#08-vue刷新当前页面)
+  - [vue项目在当前页面做无线跳转，前进和后退都刷新页面数据](#vue项目在当前页面做无线跳转前进和后退都刷新页面数据)
+  - [关于Element-ui中el-Upload上传图片不及时刷新的问题](#关于element-ui中el-upload上传图片不及时刷新的问题)
 
 <!-- /TOC -->
 
 ---
 
-
-### 百度网址统计
+## userful代码片段
+### 0.1. 百度网址统计
 
 网站统计是指通过专业的网站统计分析系统（或软件），对网站访问信息的记录并归类，以及在此基础上的统计分析，如网站访问量的增长趋势图、用户访问最高的时段、访问最多的网页、停留时间、用户使用的搜索引擎，主要关键词、来路、入口、浏览深度、所用语言、所用浏览器种类、时段访问量统计分析、日段访问量统计分析以及周月访问量统计分析等网站访问数据的基础分析。
 
@@ -38,7 +43,7 @@
 
 ---
 
-### 让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`
+### 0.2. 让当前的元素滚动到浏览器窗口的可视区域内 `Element.scrollIntoView()`
 
 ```css
 /*  凡是需要滚动的地方都加一句scroll-behavior:smooth就好了！ */
@@ -103,7 +108,7 @@ scrollIntoView 只接受一个参数，但接受两种类型的参数，分别�
 ---
 
 
-### 苹果设备 h5 页面软键盘收回后页面底部留白问题
+### 0.3. 苹果设备 h5 页面软键盘收回后页面底部留白问题
 
 ```js
 // 这里监听键盘收起，然后滚动顶部
@@ -153,7 +158,7 @@ if (isIos) {
 ---
 
 
-### 打字机效果
+### 0.4. 打字机效果
 
 ```js
 function text(list) {
@@ -175,7 +180,8 @@ function text(list) {
 text(['又是一年中秋到,', '合家团聚乐陶陶,', '公牛HR祝您阖家欢乐！']);
 ```
 
-### 定时轮询拉取数据
+## 项目中有用代码片段
+### 0.5. 定时轮询拉取数据
 ```js
 setInterval(function(){}, milliseconds)——会不停的调用函数
 setTimeout(function(){}, milliseconds)——只执行函数一次
@@ -218,7 +224,7 @@ var failed = 0;
 })();
 ```
 
-### axios 拦截器与取消 pending 状态请求
+### 0.6. axios 拦截器与取消 pending 状态请求
 ```js
 /**
  * axios 拦截器配置
@@ -422,7 +428,7 @@ export default axiosPlugin
 //   console.log('-- res.status field:', res.status)
 // })
 ```
-### Vue使用axios,终止多次请求方式,防抖
+### 0.7. Vue使用axios,终止多次请求方式,防抖
 ```js
 // 在项目中经常有一些场景会连续发送多个请求，而异步会导致最后得到的结果不是我们想要的，并且对性能也有非常大的影响。例如一个搜索框，每输入一个字符都要发送一次请求，但输入过快的时候其实前面的请求并没有必要真的发送出去，这时候就需要在发送新请求的时候直接取消上一次请求。
 request(keyword) {
@@ -452,3 +458,133 @@ cancelRequest(){
 		}
 }
 ```
+
+### 0.8. vue刷新当前页面
+1. 使用`window.location.href window.location.replace() window.location.reload()`会出现空白，体验不是很好
+2. 使用 `provide / inject`
+简单的来说就是在父组件中通过provide来提供变量，然后在子组件中通过inject来注入变量。
+```html
+<!-- app.vue -->
+<template>
+  <div id="app">
+    <router-view v-if="isRouterAlive"></router-view>
+  </div>
+</template>
+<script>
+export default {
+  name: 'App',
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
+  data(){
+    return{
+      isRouterAlive:true
+    }
+  },
+  methods:{
+    reload(){
+      this.isRouterAlive = false;
+      this.$nextTick(function(){
+        this.isRouterAlive = true;
+      })
+    }
+  }
+}
+</script>
+```
+```html
+<!-- 需要跳转的页面： 前面会有这个 inject -->
+<template>
+    <button @click="refresh"></button>
+</template>
+<script>
+    export default{
+        name: 'refresh',
+        inject: ['reload'],
+        methods: {
+              refresh () {
+                // 后面想刷新当前页面的地方这样写：
+                  this.reload()
+              }
+        }
+    }
+</script>
+```
+
+###  vue项目在当前页面做无线跳转，前进和后退都刷新页面数据
+
+若有需求如下，有1个不定层级的列表，如果有子元素，则点击父级跳转到其下面的子元素，父子都在同一个页面去渲染，需保证渲染不同层级的时候根据向后台请求到的数据刷新页面，回退上一步（其实还是当前页面）也能刷新上一层级的数据
+
+```html
+<template>
+  <div id="app">
+    <!-- :key="this.$route.path" -->
+    <router-view v-if="isRouterAlive"  />
+  </div>
+</template>
+<script>
+  export default {
+    name: 'App',
+    // provide(){
+    //   return{
+    //     reload:this.reload
+    //   }
+    // },
+    data(){
+      return {
+        isRouterAlive:true,
+      }
+    },
+    watch:{
+      $route(to,from){
+        console.log('into app watch',to,from)
+        // 同一页面跳转的时候，前进后退强制刷新
+        if(to.path === from.path){
+          console.log('same page 跳转')
+          this.reload()
+        }
+      }
+    },
+    methods:{
+      reload(){
+        this.isRouterAlive = false;
+        this.$nextTick(function () {
+          this.isRouterAlive = true
+        });
+      },
+    },
+
+  }
+</script>
+```
+
+### 关于Element-ui中el-Upload上传图片不及时刷新的问题
+
+**用`this.$forceUpdate`**来强制重新渲染
+```html
+<el-upload
+  class="avatar-uploader"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload">
+  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+</el-upload>
+<script>
+  ...
+handleAvatarSuccess(res, file) {
+
+  // 强制重新渲染
+  this.$forceUpdate()
+  
+  this.imageUrl = URL.createObjectURL(file.raw);
+},
+</script>
+```
+
+
+
+

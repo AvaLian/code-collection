@@ -6,16 +6,123 @@ CSS 代码总结
 
 ## 目录
 
-- [基础知识](#基础-css-总结)
-    1. [placeholder 输入提示设置](#placeholder-输入提示设置)
-    2. [css 单行、多行文本省略号](#css-单行-多行文本省略号)
-    3. [图文不可选择](#图文不可选择)
-    4. [css -表单验证](#css-表单验证)
-- [你不知道的 css](#你未必知道的-49-个-CSS-知识点)
-    1. []()
-- [ios](#section_ios)
 
+<!-- TOC -->
+
+- [目录](#目录)
+- [](#)
+    - [css基础](#css基础)
+    - [Background 属性详解](#background-属性详解)
+- [基础 css 总结](#基础-css-总结)
+        - [placeholder 输入提示设置](#placeholder-输入提示设置)
+        - [css 单行、多行文本省略号](#css-单行多行文本省略号)
+        - [图文不可选择](#图文不可选择)
+        - [css -表单验证](#css--表单验证)
+- [你未必知道的 49 个 CSS 知识点](#你未必知道的-49-个-css-知识点)
+    - [<a name="section_ios"></a>](#a-namesection_iosa)
+- [ios 下 css 问题总结](#ios-下-css-问题总结)
+    - [css 隐藏输入框的光标](#css-隐藏输入框的光标)
+    - [ios 滚动不流畅问题之 `-webkit-overflow-scrolling:touch` 上下拉动滚动条时卡顿、慢](#ios-滚动不流畅问题之--webkit-overflow-scrollingtouch-上下拉动滚动条时卡顿慢)
+        - [探究`-webkit-overflow-scrolling:touch`偶尔卡住或不能滑动的 bug](#探究-webkit-overflow-scrollingtouch偶尔卡住或不能滑动的-bug)
+    - [长时间按住页面出现闪退](#长时间按住页面出现闪退)
+    - [iphone 及 ipad 下输入框默认内阴影和圆角](#iphone-及-ipad-下输入框默认内阴影和圆角)
+    - [ios 和 android 下触摸元素时出现半透明灰色遮罩](#ios-和-android-下触摸元素时出现半透明灰色遮罩)
+    - [active 兼容处理 即 伪类：active 失效](#active-兼容处理-即-伪类active-失效)
+    - [1px 边框](#1px-边框)
+    - [旋转屏幕时，字体大小调整的问题](#旋转屏幕时字体大小调整的问题)
+    - [transiton 闪屏](#transiton-闪屏)
+    - [圆角 bug](#圆角-bug)
+    - [页面初始化](#页面初始化)
+    - [给不同屏幕大小的手机设置特殊样式](#给不同屏幕大小的手机设置特殊样式)
+    - [select 下拉选择设置右对齐](#select-下拉选择设置右对齐)
+    - [通过 transform 进行 skew 变形，rotate 旋转会造成出现锯齿现象](#通过-transform-进行-skew-变形rotate-旋转会造成出现锯齿现象)
+    - [字体 font-family](#字体-font-family)
+    - [使用caret-color改变光标颜色](#使用caret-color改变光标颜色)
+    - [pointer-events禁用事件触发](#pointer-events禁用事件触发)
+    - [标题两边的小横杠](#标题两边的小横杠)
+
+<!-- /TOC -->
 ---
+
+### css基础
+### Background 属性详解
+> background:background-color || background-image|| background-position [ / background-size]? || background-repeat || background-attachment || background-origin || background-clip
+
+![bg详解](/img/bg.png)
+
+- `background-color`：设置元素的背景颜色
+    - 默认值 ：`transparent`
+- `background-position`：设置背景图像的起始位置
+    - 默认值：`0% 0%`    
+    - 语法：`background-position:<position> <position>]`
+    - 第一个值规定水平位置，第二个值规定垂直位置
+    - `第二个值可选,默认50%`;如果只指定了一个值，该值将用于横坐标。纵坐标将默认为50%
+    - background-position提供四个参数值:每个percentage或length值的前面必须提供关键词（即top、bottom、left、right、center）来指定`相对偏移的方向`。如`background-position:right 10px bottom 20px;` 表示相对右边界向左偏移10px，相对底边界向上偏移20px，`不包含边框`
+- `background-size`：设置背景图像的尺寸
+    - 默认值：`auto`
+    - 语法： `background-position:length|percentage|cover|contain`
+        - length([width,height='auto'])
+        - percentage([width,height='auto']):以父元素的百分比来设置背景图像的宽度和高度
+        - cover: 将背景图像等比缩放到完全覆盖容器，背景图像有可能超出容器
+            - `background-size：100%;`: 总是X轴100%铺满整个容器，Y轴可能被裁剪会出现空白填不满部分，图片不变形, 可能表现为 cover 或者 contain
+        - contain: 将背景图像等比缩放到宽度或高度与容器的宽度或高度相等，背景图像始终被包含在容器内
+    - 设定超过一张以上的图片尺寸时，需要提供多项数值，它们通过逗号分隔，如`background-size: 50% 25%, contain, 50px;`
+- `background-repeat`：设置是否及如何重复背景图像
+    - 默认值：`repeat`
+    - 语法： `background-position:<repeat-style> [<repeat-style>];` ，可设置两个值，第二个值可选；第一个用于横向，第二个用于纵向。；
+    - 可能的值： 
+        1. `repeat-x`：背景图像在横向上平铺
+        2. `repeat-y`：背景图像在纵向上平铺
+        3. `repeat`：背景图像在横向和纵向平铺
+        4. `no-repeat`：背景图像不平铺
+        5. `round`：背景图像自动缩放直到适应且填充满整个容器。（CSS3）
+        6. `space`：背景图像以相同的间距平铺且填充满整个容器或某个方向。（CSS3）
+- `background-origin：background-position` 属性相对于什么位置来定位。
+    - 默认值：`padding-box`
+    - 语法：`background-origin: padding-box|border-box|content-box;`
+        1. border-box：从border区域（含border）开始显示背景图像。
+        2. padding-box：从padding区域（含padding）开始显示背景图像。
+        3. content-box：从content区域开始显示背景图像。
+- `background-clip`：规定背景的绘制区域
+    - 默认值：`border-box`
+    - 可能的值：        
+        1. `border-box`：从border区域（不含border）开始向外裁剪背景。
+        2. `padding-box`：从padding区域（不含padding）开始向外裁剪背景。
+        3. `content-box`：从content区域开始向外裁剪背景。
+        4. `text`：从前景内容的形状（比如文字）作为裁剪区域向外裁剪，如此即可实现使用背景作为填充色之类的遮罩效果。
+            >   -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-size: cover;
+    - background-clip只是将背景和背景色粗暴的裁剪
+- `background-attachment`：设置背景图像是否固定或者随着页面的其余部分滚动
+    - 默认值：`scroll`
+    - 语法：`background-attachment : fixed | scroll | local;`
+        1. `fixed`：背景图像相对于窗体固定。
+        2. `scroll`：背景图像相对于元素固定，也就是说当元素内容滚动时背景图像不会跟着滚动，因为背景图像总是要跟着元素本身。但会随元素的祖先元素或窗体一起滚动。
+        3. `local`：背景图像相对于元素内容固定，也就是说当元素随元素滚动时背景图像也会跟着滚动，因为背景图像总是要跟着内容。（CSS3）
+- `background-image`：为元素设置背景图像
+    - 默认值：`none`
+    - 语法：`background-image: url() | none | inherit;`
+    - 一张图片：`background-image: url(img/a.jpg)`;多张图片：`background-image: url(img/a.jpg),url(img/b.jpg)`,如且背景图之间有重叠，写在前面的将会盖在写在后面的图像之上;
+- `background-blend-mode`: 把两种（及以上）的背景进行混合
+    - 语法： `background-blend-mode:normal | multiply | screen | overlay | darken | lighten | color-dodge | color-burn | hard-light 
+| soft-light | difference | exclusion | hue | saturation | color | luminosity
+    ```css
+    /* 单值 */
+    background-blend-mode: normal;
+     
+    /* 双值，每个背景一个值 */
+    background-blend-mode: darken, luminosity;
+     
+    background-blend-mode: initial;
+    background-blend-mode: inherit;
+    background-blend-mode: unset;
+    ```
+- `background-position-x、background-position-y` ：
+    -语法：`background-position-x : length | left | center | right;`,`background-position-y : length | left | center | right`
+
+> background是一个复合属性, 可设置多组属性, 每组属性间使用逗号分隔, 其中背景颜色不能设置多个且只能放在最后一组。
+
 
 ## 基础 css 总结
 
