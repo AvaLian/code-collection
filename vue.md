@@ -28,6 +28,7 @@
 - [17、vue cli3中用axios加载本地文件](#17vue-cli3中用axios加载本地文件)
 - [18、vue cli3内存不够](#18vue-cli3内存不够)
 - [19、vue项目在关闭浏览器时候向后台发送请求失败问题解决](#19vue项目在关闭浏览器时候向后台发送请求失败问题解决)
+- [vue修饰符](#vue修饰符)
 
 <!-- /TOC -->
 
@@ -405,3 +406,47 @@ yarn add cross-env -D
     });
   }
 ```
+
+### vue修饰符
+
+- `native`： 在组件上使用`v-on`只监听自定义事件（组件用`$emit`触发的事件）。如需监听根元素的原生事件，则可用`.native`修饰符
+  ```html
+//   当一个 form 元素中只有一个输入框时，在该输入框中按下回车应提交该表单。如果希望阻止这一默认行为，可以在 <el-form> 标签上添加 @submit.native.prevent ;
+<el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
+    <el-input
+        ref="username"
+        v-model="loginForm.username"
+        placeholder="Username"
+        name="username"
+        type="text"
+        tabindex="1"
+        autocomplete="on"
+    ></el-input>
+        <el-input
+        :key="passwordType"
+        ref="password"
+        v-model="loginForm.password"
+        :type="passwordType"
+        placeholder="Password"
+        name="password"
+        tabindex="2"
+        autocomplete="on"
+        @keyup.native="checkCapslock"
+        @blur="capsTooltip = false"
+        @keyup.enter.native="handleLogin"
+        />
+        <el-button
+    :loading="loading"
+    type="primary"
+    style="width:100%;margin-bottom:30px;"
+    @click.native.prevent="handleLogin"
+    >
+  ```
+- 

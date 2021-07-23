@@ -20,3 +20,20 @@ this.$nextTick(() => {
      // el-table加ref="multipleTable"
  });
 ```
+
+### 检验是否开启大写键盘
+```js
+checkCapslock({ shiftKey, key } = {}) {
+  if (key && key.length === 1) {
+    //   按住 shift 时输入小写字符 ;  未按 shift 时输入大写字符
+    if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
+      this.capsTooltip = true
+    } else {
+      this.capsTooltip = false
+    }
+  }
+  if (key === 'CapsLock' && this.capsTooltip === true) {
+    this.capsTooltip = false
+  }
+}
+```
