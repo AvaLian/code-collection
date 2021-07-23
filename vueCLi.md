@@ -1,4 +1,12 @@
-## vue cli框架中`vue.config.js`中引入全局less变量
+<!-- TOC -->
+
+- [1. vue cli框架中`vue.config.js`中引入全局less变量](#1-vue-cli框架中vueconfigjs中引入全局less变量)
+- [2. vue中微信授权](#2-vue中微信授权)
+  - [2.1. 本地微信授权](#21-本地微信授权)
+
+<!-- /TOC -->
+
+## 1. vue cli框架中`vue.config.js`中引入全局less变量
 
 ```js
 // vue.config.js
@@ -45,9 +53,9 @@ module.exports = {
 </style>
 ```
 
-## vue中微信授权
+## 2. vue中微信授权
 
-### 本地微信授权
+### 2.1. 本地微信授权
 
 1. 把auth.html放到服务器上，不用非得是根目录，如`https://probd.bullbigdata.com/wxpp/auth.html`
 2. 授权时候判断环境是本地时，redirect_ur为`https://probd.bullbigdata.com/wxpp/auth.html?backUrl=${window.location.href}`

@@ -1,24 +1,26 @@
 <!-- TOC -->
 
-- [Linux服务器nginx的安装](#linux服务器nginx的安装)
-	- [1. 下载](#1-下载)
-	- [2. 开始安装Nginx](#2-开始安装nginx)
-	- [3. 启动nginx](#3-启动nginx)
-	- [4. ssl证书配置（https配置）](#4-ssl证书配置https配置)
-- [nginx常用命令](#nginx常用命令)
-- [vue history模式下服务器配置](#vue-history模式下服务器配置)
-	- [此种配置直接使用的根域名，没有其他的二级路径，因此root直接指向目标文件夹，即包含index.html的文件夹路径](#此种配置直接使用的根域名没有其他的二级路径因此root直接指向目标文件夹即包含indexhtml的文件夹路径)
-	- [同一域名下的多个项目，用二级路径来区别，不过root不再指向项目文件夹而是它的上一级](#同一域名下的多个项目用二级路径来区别不过root不再指向项目文件夹而是它的上一级)
-	- [http是80端口，https是443端口](#http是80端口https是443端口)
-- [nginx配置不缓存html](#nginx配置不缓存html)
+- [1. Linux服务器nginx的安装](#1-linux服务器nginx的安装)
+    - [1.1. 下载](#11-下载)
+    - [1.2. 开始安装Nginx](#12-开始安装nginx)
+    - [1.3. 启动nginx](#13-启动nginx)
+    - [1.4. ssl证书配置（https配置）](#14-ssl证书配置https配置)
+- [2. nginx常用命令](#2-nginx常用命令)
+- [3. nginx更换http证书不生效，页面102](#3-nginx更换http证书不生效页面102)
+- [4. Linux服务器根目录下面多个二级项目文件，则可配置域名指向项目根目录](#4-linux服务器根目录下面多个二级项目文件则可配置域名指向项目根目录)
+- [5. vue history模式下服务器配置](#5-vue-history模式下服务器配置)
+    - [5.1. 此种配置直接使用的根域名，没有其他的二级路径，因此root直接指向目标文件夹，即包含index.html的文件夹路径](#51-此种配置直接使用的根域名没有其他的二级路径因此root直接指向目标文件夹即包含indexhtml的文件夹路径)
+    - [5.2. 同一域名下的多个项目，用二级路径来区别，不过root不再指向项目文件夹而是它的上一级](#52-同一域名下的多个项目用二级路径来区别不过root不再指向项目文件夹而是它的上一级)
+    - [5.3. http是80端口，https是443端口](#53-http是80端口https是443端口)
+- [6. nginx配置不缓存html](#6-nginx配置不缓存html)
 
 <!-- /TOC -->
 
-## Linux服务器nginx的安装
-### 1. 下载	
+## 1. Linux服务器nginx的安装
+### 1.1. 下载	
     1. 首先去官网下载Nginx的tar包(下载稳定版),如nginx-1.20.0.tar.gz
     2. 下载完成之后，把它上传到服务器上，如/usr/local目录
-### 2. 开始安装Nginx
+### 1.2. 开始安装Nginx
     1. 进入到/usr/local  使用命令 `tar -zxvf nginx-1.20.0.tar.gz`  进行解压nginx， 
     2. 解压后进入到nginx文件夹内   cd nginx-1.20.0
         ```js
@@ -32,10 +34,10 @@
     5. 接下来通过命令 make 编译, 如果上述方法还是显示make失败 那么采取如下方式更新`yum：yum update`，更新完成后，先删除之前准备make的nginx包，然后重新解压一个
     6. 使用命令 `make install` 安装
     7. 进入到sbin目录 然后`./nginx`启动   nginx默认是80端口 如果你想修改端口就进入到conf目录下找到nginx.conf修改
-### 3. 启动nginx
+### 1.3. 启动nginx
 	1. 进入到nginx的sbin目录  命令./nginx启动
 	2. 最后，可以在服务器上命令输入：http://ip:port/ 服务器地址+nginx端口号，访问页面
-### 4. ssl证书配置（https配置）
+### 1.4. ssl证书配置（https配置）
    1. 进入到你的解压缩后的nginx目录, 输入： `./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module`
    2. 接下来执行
        ```
@@ -63,7 +65,7 @@
 
 
 
-## nginx常用命令
+## 2. nginx常用命令
 
 1. 查看安装目录： ` rpm -ql nginx`
 2. 查看nginx版本： ` nginx -v`
@@ -75,7 +77,7 @@
 8. 查看443接口是否开启：`netstat -anop|grep 443`
 
 
-## nginx更换http证书不生效，页面102
+## 3. nginx更换http证书不生效，页面102
 
 拷贝新的证书到服务器，修改nginx.conf中关于htpps证书的配置，重启nginx后，发现页面不能正常访问，多方排查问题后，发现是没有关掉所有进程的问题。
 
@@ -100,7 +102,7 @@ root     15926 15125  0 16:56 pts/0    00:00:00 grep --color=auto nginx
 ```
 
 
-## Linux服务器根目录下面多个二级项目文件，则可配置域名指向项目根目录
+## 4. Linux服务器根目录下面多个二级项目文件，则可配置域名指向项目根目录
 
 如服务器opt目录下面有`a`、`b`文件夹，分别放置不同的vue打包项目文件，按如下配置则可访问
 `http://域名地址/a/`，` http://域名地址/b/`
@@ -164,9 +166,9 @@ location /hello/ {
 
 
 
-## vue history模式下服务器配置
+## 5. vue history模式下服务器配置
 
-### 此种配置直接使用的根域名，没有其他的二级路径，因此root直接指向目标文件夹，即包含index.html的文件夹路径
+### 5.1. 此种配置直接使用的根域名，没有其他的二级路径，因此root直接指向目标文件夹，即包含index.html的文件夹路径
 ```js
 server {
 　　listen 80;
@@ -193,7 +195,7 @@ server {
 ```
 
 
-###  同一域名下的多个项目，用二级路径来区别，不过root不再指向项目文件夹而是它的上一级
+### 5.2. 同一域名下的多个项目，用二级路径来区别，不过root不再指向项目文件夹而是它的上一级
 
 打包后的项目放在二级路径`/course`下面， `course`在资源管理器`/usr/share/nginx/qa/`下面
 
@@ -205,9 +207,9 @@ location /course {
 　　}
 ```
 
-### http是80端口，https是443端口
+### 5.3. http是80端口，https是443端口
 
-## nginx配置不缓存html
+## 6. nginx配置不缓存html
 
 浏览器或者系统访问网页都会有自己的一套缓存机制，这就可能会导致前端代码已经更新了，但是用户还是访问了之前的缓存。
 

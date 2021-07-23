@@ -4,6 +4,7 @@
 ---
 <!-- TOC -->
 
+  - [多层&&时可以使用es6链判断运算符](#多层时可以使用es6链判断运算符)
   - [可以嵌套的解构赋值](#可以嵌套的解构赋值)
   - [${ }中函数调用](#-中函数调用)
   - [repeat( )函数将目标字符串重复N次，返回一个新的字符串](#repeat-函数将目标字符串重复n次返回一个新的字符串)
@@ -65,6 +66,30 @@
 
 <!-- /TOC -->
 ---
+
+### 多层&&时可以使用es6链判断运算符
+```js
+ let aaa = (message && message.body && message.body.user && message.body.user.firstName) ||"没有"
+
+// es6链判断运算符
+let bbb = message?.body?.user?.firstName || '没有'
+
+// 在vue中使用
+// 1.下载@babel/plugin-proposal-optional-chaining
+npm install --save-dev @babel/plugin-proposal-optional-chaining
+// 2. babel.config.js添加
+module.exports = {
+  presets: [
+    '@vue/app',
+  ],
+  plugins:[
+    "@babel/plugin-proposal-optional-chaining"
+  ]
+}
+// 3. 重启项目
+```
+
+
 
 ### 可以嵌套的解构赋值
 ```js

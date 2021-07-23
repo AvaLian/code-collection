@@ -1,3 +1,16 @@
+## 常用命令
+![git](./img/git.png)
+```js
+git log
+git reflog //查看所有log
+
+git status
+
+git fetch + git merge = git pull
+
+git reset --hard head^ //回退到上一次提交的代码
+```
+
 ## 协作开发如何更新代码
 
 ### 方法1：如果你想保留刚才本地修改的代码，并把git服务器上的代码pull到本地（本地刚才修改的代码将会被暂时封存起来）
@@ -15,4 +28,13 @@ git stash pop
 ```js
 git reset --hard  
 git pull origin master  
+```
+
+## 本地代码暂不提交
+- `stash`变更状态的缓存，不可推送到远程仓库
+- `commit`提交，可推送到远程仓库
+```js
+git stash // git stash --help查看其对应具体命令
+...
+git stash apply
 ```
